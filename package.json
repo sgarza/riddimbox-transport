@@ -7,7 +7,7 @@
   "moduleName": "RiddimBox",
   "scripts": {
     "build": "BABEL_ENV=build rollup -c",
-    "test": "BABEL_ENV=test jest --coverage"
+    "test": "BABEL_ENV=test jest --coverage --colors"
   },
   "author": "Sergio de la Garza",
   "license": "MIT",
