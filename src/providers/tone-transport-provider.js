@@ -1,6 +1,10 @@
+import constants from "../constants";
+const { DEFAULT_TIME_SIGNATURE_VALUE } = constants;
+
 class ToneTransportProvider {
   constructor(Tone) {
     this.engine = Tone;
+    this._timeSignature = DEFAULT_TIME_SIGNATURE_VALUE;
   }
 
   get state() {
@@ -27,14 +31,24 @@ class ToneTransportProvider {
     return parseInt(this.engine.Transport.swingSubdivision, 10);
   }
 
-  set swingSubdivision(value) {
-    const validValues = [8, 16];
+  set swingSubdivision(swingSubdivision) {
+    const validSubdivisions = [8, 16];
 
-    if (!validValues.includes(value)) {
+    if (!validSubdivisions.includes(swingSubdivision)) {
       throw new Error("Invalid subdivision value");
     }
 
-    this.engine.Transport.swingSubdivision = `${value}n`;
+    this.engine.Transport.swingSubdivision = `${swingSubdivision}n`;
+  }
+
+  get timeSignature() {
+    return this._timeSignature;
+  }
+
+  set timeSignature(timeSignature) {
+    this._validateTimeSignature(timeSignature);
+    this._timeSignature = timeSignature;
+    this.engine.Transport.timeSignature = timeSignature;
   }
 
   start() {
@@ -43,6 +57,23 @@ class ToneTransportProvider {
 
   stop() {
     this.engine.Transport.stop();
+  }
+
+  _validateTimeSignature(timeSignature) {
+    const validBars = [4, 8];
+    if (!Array.isArray(timeSignature)) {
+      throw new Error("Time signature must an array, ex: [4, 4]");
+    }
+
+    if (timeSignature.length !== 2) {
+      throw new Error(
+        "Time signature must an array of 2 positions, ex: [4, 4]"
+      );
+    }
+
+    if (!validBars.includes(timeSignature[1])) {
+      throw new Error("Invalid time signature");
+    }
   }
 }
 

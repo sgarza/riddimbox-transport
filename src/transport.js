@@ -33,8 +33,16 @@ class Transport {
     return Transport.provider.swingSubdivision;
   }
 
-  static set swingSubdivision(value) {
-    Transport.provider.swingSubdivision = value;
+  static set swingSubdivision(swingSubdivision) {
+    Transport.provider.swingSubdivision = swingSubdivision;
+  }
+
+  static get timeSignature() {
+    return Transport.provider.timeSignature;
+  }
+
+  static set timeSignature(timeSignature) {
+    Transport.provider.timeSignature = timeSignature;
   }
 
   static start() {

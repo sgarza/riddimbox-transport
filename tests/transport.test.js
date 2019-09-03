@@ -4,7 +4,8 @@ const {
   TRANSPORT_STOPPED,
   DEFAULT_BPM_VALUE,
   DEFAULT_SWING_VALUE,
-  DEFAULT_SWING_SUBDIVISION_VALUE
+  DEFAULT_SWING_SUBDIVISION_VALUE,
+  DEFAULT_TIME_SIGNATURE_VALUE
 } = constants;
 
 describe("Transport", () => {
@@ -125,6 +126,78 @@ describe("Transport", () => {
       Transport.swingSubdivision = updatedSwingSubdivisionValue;
 
       expect(Transport.swingSubdivision).toBe(updatedSwingSubdivisionValue);
+    });
+
+    it("should get the default time signature", () => {
+      const Tone = {
+        Transport: { timeSignature: DEFAULT_TIME_SIGNATURE_VALUE }
+      };
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      expect(Transport.timeSignature).toBe(DEFAULT_TIME_SIGNATURE_VALUE);
+    });
+
+    it("should throw if setting an invalid time signature", () => {
+      const Tone = {
+        Transport: { timeSignature: DEFAULT_TIME_SIGNATURE_VALUE }
+      };
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      const wrapper = () => {
+        Transport.timeSignature = [4, 7];
+      };
+
+      expect(wrapper).toThrow("Invalid time signature");
+    });
+
+    it("should throw if time signature if not an array", () => {
+      const Tone = {
+        Transport: { timeSignature: DEFAULT_TIME_SIGNATURE_VALUE }
+      };
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      const wrapper = () => {
+        Transport.timeSignature = 4;
+      };
+
+      expect(wrapper).toThrow("Time signature must an array, ex: [4, 4]");
+    });
+
+    it("should throw if time signature if not an array of 2 positions", () => {
+      const Tone = {
+        Transport: { timeSignature: DEFAULT_TIME_SIGNATURE_VALUE }
+      };
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      const wrapper = () => {
+        Transport.timeSignature = [4];
+      };
+
+      expect(wrapper).toThrow(
+        "Time signature must an array of 2 positions, ex: [4, 4]"
+      );
+    });
+
+    it("should set a valid time signature", () => {
+      const Tone = {
+        Transport: { timeSignature: DEFAULT_TIME_SIGNATURE_VALUE }
+      };
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      const updatedTimeSignatureValue = [5, 4];
+      Transport.timeSignature = updatedTimeSignatureValue;
+
+      expect(Transport.timeSignature).toBe(updatedTimeSignatureValue);
     });
   });
 });
