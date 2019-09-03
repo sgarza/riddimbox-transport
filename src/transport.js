@@ -17,6 +17,10 @@ class Transport {
     Transport.provider.start();
   }
 
+  static stop() {
+    Transport.provider.stop();
+  }
+
   static _throwIfProviderNotSet() {
     if (!_provider) {
       throw new Error(

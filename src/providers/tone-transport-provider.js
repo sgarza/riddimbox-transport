@@ -10,6 +10,10 @@ class ToneTransportProvider {
   start() {
     this.engine.start();
   }
+
+  stop() {
+    this.engine.stop();
+  }
 }
 
 export default ToneTransportProvider;
