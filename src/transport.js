@@ -29,6 +29,14 @@ class Transport {
     Transport.provider.swing = swing;
   }
 
+  static get swingSubdivision() {
+    return Transport.provider.swingSubdivision;
+  }
+
+  static set swingSubdivision(value) {
+    Transport.provider.swingSubdivision = value;
+  }
+
   static start() {
     Transport.provider.start();
   }

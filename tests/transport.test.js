@@ -3,7 +3,8 @@ const {
   TRANSPORT_STARTED,
   TRANSPORT_STOPPED,
   DEFAULT_BPM_VALUE,
-  DEFAULT_SWING_VALUE
+  DEFAULT_SWING_VALUE,
+  DEFAULT_SWING_SUBDIVISION_VALUE
 } = constants;
 
 describe("Transport", () => {
@@ -13,11 +14,7 @@ describe("Transport", () => {
 
   describe("When the provider is not set", () => {
     it("should throw if no provider is set", () => {
-      const wrapper = () => {
-        return Transport.start();
-      };
-
-      expect(wrapper).toThrow();
+      expect(Transport.start).toThrow();
     });
   });
 
@@ -27,7 +24,6 @@ describe("Transport", () => {
       const spy = jest.spyOn(Tone.Transport, "start");
 
       const provider = new ToneTransportProvider(Tone);
-
       Transport.provider = provider;
 
       Transport.start();
@@ -41,7 +37,6 @@ describe("Transport", () => {
       const spy = jest.spyOn(Tone.Transport, "stop");
 
       const provider = new ToneTransportProvider(Tone);
-
       Transport.provider = provider;
 
       Transport.stop();
@@ -54,7 +49,6 @@ describe("Transport", () => {
       const Tone = { Transport: { bpm: DEFAULT_BPM_VALUE } };
 
       const provider = new ToneTransportProvider(Tone);
-
       Transport.provider = provider;
 
       expect(Transport.bpm).toBe(DEFAULT_BPM_VALUE);
@@ -64,7 +58,6 @@ describe("Transport", () => {
       const Tone = { Transport: { bpm: DEFAULT_BPM_VALUE } };
 
       const provider = new ToneTransportProvider(Tone);
-
       Transport.provider = provider;
 
       const updatedBPMValue = 92;
@@ -77,7 +70,6 @@ describe("Transport", () => {
       const Tone = { Transport: { swing: DEFAULT_SWING_VALUE } };
 
       const provider = new ToneTransportProvider(Tone);
-
       Transport.provider = provider;
 
       expect(Transport.swing).toBe(DEFAULT_SWING_VALUE);
@@ -87,13 +79,52 @@ describe("Transport", () => {
       const Tone = { Transport: { swing: DEFAULT_SWING_VALUE } };
 
       const provider = new ToneTransportProvider(Tone);
-
       Transport.provider = provider;
 
       const updatedSwingValue = 57;
       Transport.swing = updatedSwingValue;
 
       expect(Transport.swing).toBe(updatedSwingValue);
+    });
+
+    it("should get the default Swing subdivision", () => {
+      const Tone = {
+        Transport: { swingSubdivision: DEFAULT_SWING_SUBDIVISION_VALUE }
+      };
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      expect(Transport.swingSubdivision).toBe(DEFAULT_SWING_SUBDIVISION_VALUE);
+    });
+
+    it("should throw if setting an invalid swing subdivision", () => {
+      const Tone = {
+        Transport: { swingSubdivision: DEFAULT_SWING_SUBDIVISION_VALUE }
+      };
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      const wrapper = () => {
+        Transport.swingSubdivision = 24;
+      };
+
+      expect(wrapper).toThrow("Invalid subdivision value");
+    });
+
+    it("should set a valid swing subdivision", () => {
+      const Tone = {
+        Transport: { swingSubdivision: DEFAULT_SWING_SUBDIVISION_VALUE }
+      };
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      const updatedSwingSubdivisionValue = 16;
+      Transport.swingSubdivision = updatedSwingSubdivisionValue;
+
+      expect(Transport.swingSubdivision).toBe(updatedSwingSubdivisionValue);
     });
   });
 });

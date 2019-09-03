@@ -23,6 +23,20 @@ class ToneTransportProvider {
     this.engine.Transport.swing = swing / 100;
   }
 
+  get swingSubdivision() {
+    return parseInt(this.engine.Transport.swingSubdivision, 10);
+  }
+
+  set swingSubdivision(value) {
+    const validValues = [8, 16];
+
+    if (!validValues.includes(value)) {
+      throw new Error("Invalid subdivision value");
+    }
+
+    this.engine.Transport.swingSubdivision = `${value}n`;
+  }
+
   start() {
     this.engine.Transport.start();
   }
