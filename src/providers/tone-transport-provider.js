@@ -4,15 +4,23 @@ class ToneTransportProvider {
   }
 
   get state() {
-    return this.engine.state;
+    return this.engine.Transport.state;
+  }
+
+  get bpm() {
+    return this.engine.Transport.bpm;
+  }
+
+  set bpm(bpm) {
+    this.engine.Transport.bpm = bpm;
   }
 
   start() {
-    this.engine.start();
+    this.engine.Transport.start();
   }
 
   stop() {
-    this.engine.stop();
+    this.engine.Transport.stop();
   }
 }
 

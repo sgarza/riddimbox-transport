@@ -13,6 +13,14 @@ class Transport {
     return Transport.provider.state;
   }
 
+  static get bpm() {
+    return Transport.provider.bpm;
+  }
+
+  static set bpm(bpm) {
+    Transport.provider.bpm = bpm;
+  }
+
   static start() {
     Transport.provider.start();
   }
