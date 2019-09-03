@@ -21,6 +21,14 @@ class Transport {
     Transport.provider.bpm = bpm;
   }
 
+  static get swing() {
+    return Transport.provider.swing;
+  }
+
+  static set swing(swing) {
+    Transport.provider.swing = swing;
+  }
+
   static start() {
     Transport.provider.start();
   }

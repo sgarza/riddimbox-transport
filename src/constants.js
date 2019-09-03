@@ -1,5 +1,6 @@
 export default {
   TRANSPORT_STARTED: "started",
   TRANSPORT_STOPPED: "stopped",
-  DEFAULT_BPM_VALUE: 120
+  DEFAULT_BPM_VALUE: 120,
+  DEFAULT_SWING_VALUE: 0
 };

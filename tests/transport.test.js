@@ -1,5 +1,10 @@
 import { Transport, constants, ToneTransportProvider } from "../src";
-const { TRANSPORT_STARTED, TRANSPORT_STOPPED, DEFAULT_BPM_VALUE } = constants;
+const {
+  TRANSPORT_STARTED,
+  TRANSPORT_STOPPED,
+  DEFAULT_BPM_VALUE,
+  DEFAULT_SWING_VALUE
+} = constants;
 
 describe("Transport", () => {
   afterEach(() => {
@@ -55,7 +60,7 @@ describe("Transport", () => {
       expect(Transport.bpm).toBe(DEFAULT_BPM_VALUE);
     });
 
-    it("should set the default BPM value", () => {
+    it("should set a BPM value", () => {
       const Tone = { Transport: { bpm: DEFAULT_BPM_VALUE } };
 
       const provider = new ToneTransportProvider(Tone);
@@ -66,6 +71,29 @@ describe("Transport", () => {
       Transport.bpm = updatedBPMValue;
 
       expect(Transport.bpm).toBe(updatedBPMValue);
+    });
+
+    it("should get the default Swing value", () => {
+      const Tone = { Transport: { swing: DEFAULT_SWING_VALUE } };
+
+      const provider = new ToneTransportProvider(Tone);
+
+      Transport.provider = provider;
+
+      expect(Transport.swing).toBe(DEFAULT_SWING_VALUE);
+    });
+
+    it("should set a Swing value", () => {
+      const Tone = { Transport: { swing: DEFAULT_SWING_VALUE } };
+
+      const provider = new ToneTransportProvider(Tone);
+
+      Transport.provider = provider;
+
+      const updatedSwingValue = 57;
+      Transport.swing = updatedSwingValue;
+
+      expect(Transport.swing).toBe(updatedSwingValue);
     });
   });
 });

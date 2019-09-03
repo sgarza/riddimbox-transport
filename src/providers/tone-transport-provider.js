@@ -15,6 +15,14 @@ class ToneTransportProvider {
     this.engine.Transport.bpm = bpm;
   }
 
+  get swing() {
+    return Math.round(this.engine.Transport.swing * 100);
+  }
+
+  set swing(swing) {
+    this.engine.Transport.swing = swing / 100;
+  }
+
   start() {
     this.engine.Transport.start();
   }
