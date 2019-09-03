@@ -1,0 +1,27 @@
+{
+  "env": {
+    "test": {
+      "presets": [
+        [
+          "@babel/env",
+          {
+            "modules": "cjs",
+          }
+        ]
+      ]
+    },
+    "build": {
+      "presets": [
+        [
+          "@babel/env",
+          {
+            "modules": false,
+            "targets": {
+              "browsers": ["> 0.25%", "not op_mini all"]
+            }
+          }
+        ]
+      ]
+    }
+  }
+}

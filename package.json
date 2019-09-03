@@ -1,0 +1,30 @@
+{
+  "name": "@riddimbox/transport",
+  "version": "0.0.1",
+  "description": "RiddimBox Transport + Metronome component",
+  "main": "dist/index.umd.bundle.js",
+  "module": "dist/index.esm.bundle.js",
+  "moduleName": "RiddimBox",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "jest --coverage"
+  },
+  "author": "Sergio de la Garza",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "eslint": "^6.3.0",
+    "eslint-config-prettier": "^6.1.0",
+    "eslint-plugin-jest": "^22.16.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "jest": "^24.9.0",
+    "jshint": "^2.10.2",
+    "prettier": "^1.18.2",
+    "rollup": "^1.10.0",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^9.3.4",
+    "rollup-plugin-multi-entry": "^2.1.0",
+    "rollup-plugin-node-resolve": "^4.2.3"
+  }
+}
