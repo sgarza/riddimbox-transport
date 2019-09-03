@@ -1,6 +1,5 @@
 import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
-import multiEntry from "rollup-plugin-multi-entry";
 import babel from "rollup-plugin-babel";
 import {
   version,

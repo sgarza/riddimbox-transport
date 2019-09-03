@@ -6,22 +6,32 @@
           "@babel/env",
           {
             "modules": "cjs",
-          }
+          },
         ]
-      ]
+      ],
+      "plugins": [
+        "@babel/plugin-proposal-class-properties"
+      ],
     },
     "build": {
       "presets": [
         [
           "@babel/env",
-          {
-            "modules": false,
-            "targets": {
-              "browsers": ["> 0.25%", "not op_mini all"]
-            }
-          }
         ]
-      ]
-    }
+      ],
+      "plugins": [
+        "@babel/plugin-proposal-class-properties"
+      ],
+    },
+    "development": {
+      "presets": [
+        [
+          "@babel/env",
+        ]
+      ],
+      "plugins": [
+        "@babel/plugin-proposal-class-properties"
+      ],
+    },
   }
 }

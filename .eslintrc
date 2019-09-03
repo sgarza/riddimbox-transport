@@ -6,14 +6,21 @@
     "node": true,
     "jest": true,
   },
-  "plugins": ["jest"],
+  "plugins": ["babel", "jest", ],
   "extends": ["eslint:recommended", "plugin:prettier/recommended", "plugin:jest/recommended"],
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 2018
+    "allowImportExportEverywhere": false,
+    "ecmaFeatures": {
+      "globalReturn": false,
+    },
+    "babelOptions": {
+      "configFile": "./babelrc",
+    },
   },
   "settings": {},
   "rules": {
     "linebreak-style": ["error", "unix"],
-  }
+  },
+  "parser": "babel-eslint",
 }
