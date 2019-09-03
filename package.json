@@ -6,8 +6,8 @@
   "module": "dist/index.esm.bundle.js",
   "moduleName": "RiddimBox",
   "scripts": {
-    "build": "rollup -c",
-    "test": "jest --coverage"
+    "build": "BABEL_ENV=build rollup -c",
+    "test": "BABEL_ENV=test jest --coverage"
   },
   "author": "Sergio de la Garza",
   "license": "MIT",
