@@ -45,6 +45,10 @@ class Transport {
     Transport.provider.timeSignature = timeSignature;
   }
 
+  static get ticks() {
+    return Transport.provider.ticks;
+  }
+
   static start() {
     Transport.provider.start();
   }

@@ -5,6 +5,9 @@ class ToneTransportProvider {
   constructor(Tone) {
     this.engine = Tone;
     this._timeSignature = DEFAULT_TIME_SIGNATURE_VALUE;
+    this._ticks = 0;
+
+    Tone.Transport.scheduleRepeat(this._tickHandler, "1i");
   }
 
   get state() {
@@ -51,6 +54,10 @@ class ToneTransportProvider {
     this.engine.Transport.timeSignature = timeSignature;
   }
 
+  get ticks() {
+    return this._ticks;
+  }
+
   start() {
     this.engine.Transport.start();
   }
@@ -73,6 +80,14 @@ class ToneTransportProvider {
 
     if (!validBars.includes(timeSignature[1])) {
       throw new Error("Invalid time signature");
+    }
+  }
+
+  _tickHandler() {
+    this._ticks += 1;
+
+    if (this._ticks > 191) {
+      this._ticks = 0;
     }
   }
 }
