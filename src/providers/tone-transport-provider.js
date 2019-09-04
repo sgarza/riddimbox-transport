@@ -1,11 +1,12 @@
 import constants from "../constants";
-const { DEFAULT_TIME_SIGNATURE_VALUE } = constants;
+const { DEFAULT_TIME_SIGNATURE_VALUE, PPQN } = constants;
 
 class ToneTransportProvider {
   constructor(Tone) {
     this.engine = Tone;
     this._timeSignature = DEFAULT_TIME_SIGNATURE_VALUE;
     this._ticks = 0;
+    this._beats = 0;
 
     Tone.Transport.scheduleRepeat(this._tickHandler, "1i");
   }
@@ -55,7 +56,11 @@ class ToneTransportProvider {
   }
 
   get ticks() {
-    return this._ticks;
+    return this._ticks % PPQN;
+  }
+
+  get beats() {
+    return this._beats % this.timeSignature[0];
   }
 
   start() {
@@ -86,8 +91,8 @@ class ToneTransportProvider {
   _tickHandler() {
     this._ticks += 1;
 
-    if (this._ticks > 191) {
-      this._ticks = 0;
+    if (this._ticks % PPQN === 0) {
+      this._beats += 1;
     }
   }
 }

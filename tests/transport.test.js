@@ -35,6 +35,7 @@ describe("Transport", () => {
   });
 
   afterEach(() => {
+    Transport.stop();
     Transport.provider = null;
   });
 
@@ -264,7 +265,7 @@ describe("Transport", () => {
       expect(Transport.ticks).toBe(1);
     });
 
-    it("should get the current tick value inside the min & max ticks range", () => {
+    it("should get the current tick value within the min & max ticks range", () => {
       const Tone = {
         Transport: {
           ...mockToneTransport
@@ -285,6 +286,52 @@ describe("Transport", () => {
 
       expect(spy).toHaveBeenCalledTimes(1);
       expect(isValidTickValue(Transport.ticks)).toBe(true);
+    });
+
+    it("should increment the beats count when ticks 192 times", () => {
+      const Tone = {
+        Transport: {
+          ...mockToneTransport
+        }
+      };
+
+      const spy = jest.spyOn(Tone.Transport, "scheduleRepeat");
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      expect(Transport.beats).toBe(0);
+
+      Transport.start();
+      for (let index = 0; index < 192; index++) {
+        provider._tickHandler();
+      }
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(Transport.beats).toBe(1);
+    });
+
+    it("should increment the beats count and return a value not greater than timeSignature[beats]", () => {
+      const Tone = {
+        Transport: {
+          ...mockToneTransport
+        }
+      };
+
+      const spy = jest.spyOn(Tone.Transport, "scheduleRepeat");
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      expect(Transport.beats).toBe(0);
+
+      Transport.start();
+      for (let index = 0; index < 192 * 5; index++) {
+        provider._tickHandler();
+      }
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(Transport.beats).toBe(1);
     });
   });
 });

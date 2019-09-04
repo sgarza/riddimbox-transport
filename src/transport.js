@@ -49,6 +49,10 @@ class Transport {
     return Transport.provider.ticks;
   }
 
+  static get beats() {
+    return Transport.provider.beats;
+  }
+
   static start() {
     Transport.provider.start();
   }
