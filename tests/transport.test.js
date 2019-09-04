@@ -35,7 +35,6 @@ describe("Transport", () => {
   });
 
   afterEach(() => {
-    Transport.stop();
     Transport.provider = null;
   });
 
@@ -332,6 +331,29 @@ describe("Transport", () => {
 
       expect(spy).toHaveBeenCalledTimes(1);
       expect(Transport.beats).toBe(1);
+    });
+
+    it("should increment the bars count when beats complete a round", () => {
+      const Tone = {
+        Transport: {
+          ...mockToneTransport
+        }
+      };
+
+      const spy = jest.spyOn(Tone.Transport, "scheduleRepeat");
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      expect(Transport.bars).toBe(0);
+
+      Transport.start();
+      for (let index = 0; index < 192 * 5; index++) {
+        provider._tickHandler();
+      }
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(Transport.bars).toBe(1);
     });
   });
 });

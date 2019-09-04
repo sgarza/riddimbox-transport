@@ -53,6 +53,10 @@ class Transport {
     return Transport.provider.beats;
   }
 
+  static get bars() {
+    return Transport.provider.bars;
+  }
+
   static start() {
     Transport.provider.start();
   }

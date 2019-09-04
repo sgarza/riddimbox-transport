@@ -7,6 +7,7 @@ class ToneTransportProvider {
     this._timeSignature = DEFAULT_TIME_SIGNATURE_VALUE;
     this._ticks = 0;
     this._beats = 0;
+    this._bars = 0;
 
     Tone.Transport.scheduleRepeat(this._tickHandler, "1i");
   }
@@ -63,6 +64,10 @@ class ToneTransportProvider {
     return this._beats % this.timeSignature[0];
   }
 
+  get bars() {
+    return this._bars % this.timeSignature[1];
+  }
+
   start() {
     this.engine.Transport.start();
   }
@@ -93,6 +98,10 @@ class ToneTransportProvider {
 
     if (this._ticks % PPQN === 0) {
       this._beats += 1;
+
+      if (this._beats % this.timeSignature[0] === 0) {
+        this._bars += 1;
+      }
     }
   }
 }
