@@ -17,11 +17,11 @@ class ToneTransportProvider {
   }
 
   get bpm() {
-    return this.engine.Transport.bpm;
+    return this.engine.Transport.bpm.value;
   }
 
   set bpm(bpm) {
-    this.engine.Transport.bpm = bpm;
+    this.engine.Transport.bpm.value = bpm;
   }
 
   get swing() {
