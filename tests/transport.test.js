@@ -7,7 +7,8 @@ const {
   DEFAULT_SWING_SUBDIVISION_VALUE,
   DEFAULT_TIME_SIGNATURE_VALUE,
   MIN_TICKS,
-  MAX_TICKS
+  MAX_TICKS,
+  PPQN
 } = constants;
 
 let mockToneTransport;
@@ -302,7 +303,7 @@ describe("Transport", () => {
       expect(Transport.beats).toBe(0);
 
       Transport.start();
-      for (let index = 0; index < 192; index++) {
+      for (let index = 0; index < PPQN; index++) {
         provider._tickHandler();
       }
 
@@ -325,7 +326,7 @@ describe("Transport", () => {
       expect(Transport.beats).toBe(0);
 
       Transport.start();
-      for (let index = 0; index < 192 * 5; index++) {
+      for (let index = 0; index < PPQN * 5; index++) {
         provider._tickHandler();
       }
 
@@ -348,7 +349,7 @@ describe("Transport", () => {
       expect(Transport.bars).toBe(0);
 
       Transport.start();
-      for (let index = 0; index < 192 * 5; index++) {
+      for (let index = 0; index < PPQN * 5; index++) {
         provider._tickHandler();
       }
 
