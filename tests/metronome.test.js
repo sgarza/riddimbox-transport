@@ -40,7 +40,8 @@ describe("Metronome", () => {
       Transport: { ...mockToneTransport, state: TRANSPORT_STARTED },
       Synth: () => {
         return {
-          triggerAttackRelease: () => {}
+          triggerAttackRelease: () => {},
+          connect: audioNode => {}
         };
       }
     };
@@ -126,5 +127,24 @@ describe("Metronome", () => {
       );
       expect(metronome).toBeInstanceOf(Metronome);
     });
+  });
+
+  it("should connect its output to another node", () => {
+    const Tone = { ...mockTone };
+    const AudioNode = {};
+
+    const toneTransportProvider = new ToneTransportProvider(Tone);
+    Transport.provider = toneTransportProvider;
+
+    const provider = new ToneMetronomeProvider(Transport);
+    const metronome = new Metronome(provider);
+
+    const spy = jest.spyOn(provider.synth, "connect");
+
+    metronome.connect(AudioNode);
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(AudioNode);
+    expect(metronome).toBeInstanceOf(Metronome);
   });
 });

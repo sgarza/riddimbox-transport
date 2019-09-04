@@ -8,6 +8,10 @@ class Metronome {
 
     this.provider = provider;
   }
+
+  connect(audioNode) {
+    this.provider.connect(audioNode);
+  }
 }
 
 export default Metronome;

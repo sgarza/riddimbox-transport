@@ -23,6 +23,10 @@ class ToneMetronomeProvider {
     );
   }
 
+  connect(audioNode) {
+    this.synth.connect(audioNode);
+  }
+
   _repeatHandler(time) {
     if (this.transport.beats === 0) {
       this.synth.triggerAttackRelease("G4", "16n", time);
