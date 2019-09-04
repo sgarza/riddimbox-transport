@@ -29,11 +29,11 @@ describe("Metronome", () => {
         mockToneTransport.state = TRANSPORT_STOPPED;
       },
       state: TRANSPORT_STOPPED,
-      bpm: DEFAULT_BPM_VALUE,
+      bpm: { value: DEFAULT_BPM_VALUE },
       swing: DEFAULT_SWING_VALUE,
       swingSubdivision: DEFAULT_SWING_SUBDIVISION_VALUE,
       timeSignature: DEFAULT_TIME_SIGNATURE_VALUE,
-      scheduleRepeat: (note, length, time) => {}
+      scheduleRepeat: () => {}
     };
 
     mockTone = {
@@ -41,7 +41,7 @@ describe("Metronome", () => {
       Synth: () => {
         return {
           triggerAttackRelease: () => {},
-          connect: audioNode => {}
+          connect: () => {}
         };
       }
     };
