@@ -5,23 +5,52 @@ const {
   DEFAULT_BPM_VALUE,
   DEFAULT_SWING_VALUE,
   DEFAULT_SWING_SUBDIVISION_VALUE,
-  DEFAULT_TIME_SIGNATURE_VALUE
+  DEFAULT_TIME_SIGNATURE_VALUE,
+  MIN_TICKS,
+  MAX_TICKS
 } = constants;
 
+let mockToneTransport;
+
+const isValidTickValue = ticks => {
+  return ticks >= MIN_TICKS && ticks <= MAX_TICKS;
+};
+
 describe("Transport", () => {
+  beforeEach(() => {
+    mockToneTransport = {
+      start: () => {
+        mockToneTransport.state = TRANSPORT_STARTED;
+      },
+      stop: () => {
+        mockToneTransport.state = TRANSPORT_STOPPED;
+      },
+      state: TRANSPORT_STOPPED,
+      bpm: DEFAULT_BPM_VALUE,
+      swing: DEFAULT_SWING_VALUE,
+      swingSubdivision: DEFAULT_SWING_SUBDIVISION_VALUE,
+      timeSignature: DEFAULT_TIME_SIGNATURE_VALUE,
+      scheduleRepeat: () => {}
+    };
+  });
+
   afterEach(() => {
     Transport.provider = null;
   });
 
   describe("When the provider is not set", () => {
     it("should throw if no provider is set", () => {
-      expect(Transport.start).toThrow();
+      expect(Transport.start).toThrow(
+        "You need to set a provider first. Try with the ToneTransportProvider class."
+      );
     });
   });
 
   describe("When a provider is set", () => {
     it("should start the Transport", () => {
-      const Tone = { Transport: { start: () => {}, state: TRANSPORT_STARTED } };
+      const Tone = {
+        Transport: { ...mockToneTransport, state: TRANSPORT_STARTED }
+      };
       const spy = jest.spyOn(Tone.Transport, "start");
 
       const provider = new ToneTransportProvider(Tone);
@@ -34,7 +63,9 @@ describe("Transport", () => {
     });
 
     it("should stop the Transport", () => {
-      const Tone = { Transport: { stop: () => {}, state: TRANSPORT_STOPPED } };
+      const Tone = {
+        Transport: { ...mockToneTransport, state: TRANSPORT_STOPPED }
+      };
       const spy = jest.spyOn(Tone.Transport, "stop");
 
       const provider = new ToneTransportProvider(Tone);
@@ -47,7 +78,7 @@ describe("Transport", () => {
     });
 
     it("should get the default BPM value", () => {
-      const Tone = { Transport: { bpm: DEFAULT_BPM_VALUE } };
+      const Tone = { Transport: { ...mockToneTransport } };
 
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
@@ -56,7 +87,7 @@ describe("Transport", () => {
     });
 
     it("should set a BPM value", () => {
-      const Tone = { Transport: { bpm: DEFAULT_BPM_VALUE } };
+      const Tone = { Transport: { ...mockToneTransport } };
 
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
@@ -68,7 +99,7 @@ describe("Transport", () => {
     });
 
     it("should get the default Swing value", () => {
-      const Tone = { Transport: { swing: DEFAULT_SWING_VALUE } };
+      const Tone = { Transport: { ...mockToneTransport } };
 
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
@@ -77,7 +108,7 @@ describe("Transport", () => {
     });
 
     it("should set a Swing value", () => {
-      const Tone = { Transport: { swing: DEFAULT_SWING_VALUE } };
+      const Tone = { Transport: { ...mockToneTransport } };
 
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
@@ -90,7 +121,7 @@ describe("Transport", () => {
 
     it("should get the default Swing subdivision", () => {
       const Tone = {
-        Transport: { swingSubdivision: DEFAULT_SWING_SUBDIVISION_VALUE }
+        Transport: { ...mockToneTransport }
       };
 
       const provider = new ToneTransportProvider(Tone);
@@ -101,7 +132,9 @@ describe("Transport", () => {
 
     it("should throw if setting an invalid swing subdivision", () => {
       const Tone = {
-        Transport: { swingSubdivision: DEFAULT_SWING_SUBDIVISION_VALUE }
+        Transport: {
+          ...mockToneTransport
+        }
       };
 
       const provider = new ToneTransportProvider(Tone);
@@ -116,7 +149,9 @@ describe("Transport", () => {
 
     it("should set a valid swing subdivision", () => {
       const Tone = {
-        Transport: { swingSubdivision: DEFAULT_SWING_SUBDIVISION_VALUE }
+        Transport: {
+          ...mockToneTransport
+        }
       };
 
       const provider = new ToneTransportProvider(Tone);
@@ -130,7 +165,9 @@ describe("Transport", () => {
 
     it("should get the default time signature", () => {
       const Tone = {
-        Transport: { timeSignature: DEFAULT_TIME_SIGNATURE_VALUE }
+        Transport: {
+          ...mockToneTransport
+        }
       };
 
       const provider = new ToneTransportProvider(Tone);
@@ -141,7 +178,9 @@ describe("Transport", () => {
 
     it("should throw if setting an invalid time signature", () => {
       const Tone = {
-        Transport: { timeSignature: DEFAULT_TIME_SIGNATURE_VALUE }
+        Transport: {
+          ...mockToneTransport
+        }
       };
 
       const provider = new ToneTransportProvider(Tone);
@@ -156,7 +195,9 @@ describe("Transport", () => {
 
     it("should throw if time signature if not an array", () => {
       const Tone = {
-        Transport: { timeSignature: DEFAULT_TIME_SIGNATURE_VALUE }
+        Transport: {
+          ...mockToneTransport
+        }
       };
 
       const provider = new ToneTransportProvider(Tone);
@@ -171,7 +212,9 @@ describe("Transport", () => {
 
     it("should throw if time signature if not an array of 2 positions", () => {
       const Tone = {
-        Transport: { timeSignature: DEFAULT_TIME_SIGNATURE_VALUE }
+        Transport: {
+          ...mockToneTransport
+        }
       };
 
       const provider = new ToneTransportProvider(Tone);
@@ -188,7 +231,9 @@ describe("Transport", () => {
 
     it("should set a valid time signature", () => {
       const Tone = {
-        Transport: { timeSignature: DEFAULT_TIME_SIGNATURE_VALUE }
+        Transport: {
+          ...mockToneTransport
+        }
       };
 
       const provider = new ToneTransportProvider(Tone);
@@ -198,6 +243,48 @@ describe("Transport", () => {
       Transport.timeSignature = updatedTimeSignatureValue;
 
       expect(Transport.timeSignature).toBe(updatedTimeSignatureValue);
+    });
+
+    it("should increment the tick count when ticks", () => {
+      const Tone = {
+        Transport: {
+          ...mockToneTransport
+        }
+      };
+
+      const spy = jest.spyOn(Tone.Transport, "scheduleRepeat");
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      Transport.start();
+      provider._tickHandler();
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(Transport.ticks).toBe(1);
+    });
+
+    it("should get the current tick value inside the min & max ticks range", () => {
+      const Tone = {
+        Transport: {
+          ...mockToneTransport
+        }
+      };
+
+      const spy = jest.spyOn(Tone.Transport, "scheduleRepeat");
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      Transport.start();
+
+      const emulatedTicks = 4874;
+      for (let index = 0; index < emulatedTicks; index++) {
+        provider._tickHandler();
+      }
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(isValidTickValue(Transport.ticks)).toBe(true);
     });
   });
 });
