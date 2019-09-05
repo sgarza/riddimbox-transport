@@ -29,6 +29,21 @@ function _createClass(Constructor, protoProps, staticProps) {
   return Constructor;
 }
 
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
 function _inherits(subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
     throw new TypeError("Super expression must either be null or a function");
@@ -76,8 +91,6 @@ function _possibleConstructorReturn(self, call) {
   return _assertThisInitialized(self);
 }
 
-var _provider = null;
-
 var Transport =
 /*#__PURE__*/
 function () {
@@ -103,7 +116,7 @@ function () {
   }, {
     key: "_throwIfProviderNotSet",
     value: function _throwIfProviderNotSet() {
-      if (!_provider) {
+      if (!Transport._provider) {
         throw new Error("You need to set a provider first. Try with the ToneTransportProvider class.");
       }
     }
@@ -112,10 +125,10 @@ function () {
     get: function get() {
       Transport._throwIfProviderNotSet();
 
-      return _provider;
+      return Transport._provider;
     },
     set: function set(provider) {
-      _provider = provider;
+      Transport._provider = provider;
     }
   }, {
     key: "state",
@@ -173,6 +186,8 @@ function () {
 
   return Transport;
 }();
+
+_defineProperty(Transport, "_provider", null);
 
 var domain;
 
@@ -746,6 +761,25 @@ function (_EventEmmiter) {
     _classCallCheck(this, ToneTransportProvider);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(ToneTransportProvider).call(this));
+
+    _defineProperty(_assertThisInitialized(_this), "_tickHandler", function () {
+      _this._ticks += 1;
+
+      if (_this._ticks % PPQN === 0) {
+        _this._beats += 1;
+
+        if (_this._beats % _this.timeSignature[0] === 0) {
+          _this._bars += 1;
+
+          _this.emit("bar", _this.bars);
+        }
+
+        _this.emit("beat", _this.beats);
+      }
+
+      _this.emit("tick", _this.ticks);
+    });
+
     _this.engine = Tone;
     _this._timeSignature = DEFAULT_TIME_SIGNATURE_VALUE;
     _this._ticks = 0;
@@ -759,9 +793,9 @@ function (_EventEmmiter) {
     key: "start",
     value: function start() {
       this.engine.Transport.start();
-      this.emit("tick", this.ticks);
-      this.emit("beat", this.beats);
       this.emit("bar", this.bars);
+      this.emit("beat", this.beats);
+      this.emit("tick", this.ticks);
     }
   }, {
     key: "stop",
@@ -783,22 +817,6 @@ function (_EventEmmiter) {
 
       if (!validBars.includes(timeSignature[1])) {
         throw new Error("Invalid time signature");
-      }
-    }
-  }, {
-    key: "_tickHandler",
-    value: function _tickHandler() {
-      this._ticks += 1;
-      this.emit("tick", this.ticks);
-
-      if (this._ticks % PPQN === 0) {
-        this._beats += 1;
-        this.emit("beat", this.beats);
-
-        if (this._beats % this.timeSignature[0] === 0) {
-          this._bars += 1;
-          this.emit("bar", this.bars);
-        }
       }
     }
   }, {
@@ -871,7 +889,17 @@ var ToneMetronomeProvider =
 /*#__PURE__*/
 function () {
   function ToneMetronomeProvider(Transport) {
+    var _this = this;
+
     _classCallCheck(this, ToneMetronomeProvider);
+
+    _defineProperty(this, "_repeatHandler", function (time) {
+      if (_this.transport.beats === 0) {
+        _this.synth.triggerAttackRelease("G4", "16n", time);
+      } else {
+        _this.synth.triggerAttackRelease("C4", "16n", time);
+      }
+    });
 
     this.transport = Transport;
     this.engine = Transport.provider.engine;
@@ -895,15 +923,6 @@ function () {
     key: "connect",
     value: function connect(audioNode) {
       this.synth.connect(audioNode);
-    }
-  }, {
-    key: "_repeatHandler",
-    value: function _repeatHandler(time) {
-      if (this.transport.beats === 0) {
-        this.synth.triggerAttackRelease("G4", "16n", time);
-      } else {
-        this.synth.triggerAttackRelease("C4", "16n", time);
-      }
     }
   }]);
 
