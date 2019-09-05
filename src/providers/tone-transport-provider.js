@@ -1,8 +1,11 @@
+import EventEmmiter from "eventemitter3";
+
 import constants from "../constants";
 const { DEFAULT_TIME_SIGNATURE_VALUE, PPQN } = constants;
 
-class ToneTransportProvider {
+class ToneTransportProvider extends EventEmmiter {
   constructor(Tone) {
+    super();
     this.engine = Tone;
     this._timeSignature = DEFAULT_TIME_SIGNATURE_VALUE;
     this._ticks = 0;
@@ -70,6 +73,9 @@ class ToneTransportProvider {
 
   start() {
     this.engine.Transport.start();
+    this.emit("tick", this.ticks);
+    this.emit("beat", this.beats);
+    this.emit("bar", this.bars);
   }
 
   stop() {
@@ -95,12 +101,15 @@ class ToneTransportProvider {
 
   _tickHandler() {
     this._ticks += 1;
+    this.emit("tick", this.ticks);
 
     if (this._ticks % PPQN === 0) {
       this._beats += 1;
+      this.emit("beat", this.beats);
 
       if (this._beats % this.timeSignature[0] === 0) {
         this._bars += 1;
+        this.emit("bar", this.bars);
       }
     }
   }

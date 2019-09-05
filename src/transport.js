@@ -57,6 +57,10 @@ class Transport {
     return Transport.provider.bars;
   }
 
+  static on(event, listener) {
+    return Transport.provider.on(event, listener);
+  }
+
   static start() {
     Transport.provider.start();
   }

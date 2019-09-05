@@ -356,5 +356,102 @@ describe("Transport", () => {
       expect(spy).toHaveBeenCalledTimes(1);
       expect(Transport.bars).toBe(1);
     });
+
+    it("should emit a tick event", () => {
+      const Tone = {
+        Transport: {
+          ...mockToneTransport
+        }
+      };
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      const eventHandler = jest.fn(x => x);
+
+      Transport.on("tick", eventHandler);
+
+      expect(Transport.ticks).toBe(0);
+
+      // tick
+      provider._tickHandler();
+
+      expect(eventHandler).toHaveBeenCalledTimes(1);
+      expect(eventHandler.mock.results[0].value).toBe(1);
+    });
+
+    it("should emit a beat event", () => {
+      const Tone = {
+        Transport: {
+          ...mockToneTransport
+        }
+      };
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      const eventHandler = jest.fn(x => x);
+
+      Transport.on("beat", eventHandler);
+
+      expect(Transport.ticks).toBe(0);
+
+      // beat
+      for (let index = 0; index < PPQN * 1; index++) {
+        provider._tickHandler();
+      }
+
+      expect(eventHandler).toHaveBeenCalledTimes(1);
+      expect(eventHandler.mock.results[0].value).toBe(1);
+    });
+
+    it("should emit a bar event", () => {
+      const Tone = {
+        Transport: {
+          ...mockToneTransport
+        }
+      };
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      const eventHandler = jest.fn(x => x);
+
+      Transport.on("bar", eventHandler);
+
+      expect(Transport.ticks).toBe(0);
+
+      // beat
+      for (let index = 0; index < PPQN * 4; index++) {
+        provider._tickHandler();
+      }
+
+      expect(eventHandler).toHaveBeenCalledTimes(1);
+      expect(eventHandler.mock.results[0].value).toBe(1);
+    });
+
+    it("should emit a tick, beat, bar events on Transport.start()", () => {
+      const Tone = {
+        Transport: {
+          ...mockToneTransport
+        }
+      };
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      const eventHandler = jest.fn(x => x);
+
+      Transport.on("tick", eventHandler);
+      Transport.on("beat", eventHandler);
+      Transport.on("bar", eventHandler);
+
+      Transport.start();
+
+      expect(eventHandler).toHaveBeenCalledTimes(3);
+      expect(eventHandler.mock.results[0].value).toBe(0);
+      expect(eventHandler.mock.results[1].value).toBe(0);
+      expect(eventHandler.mock.results[2].value).toBe(0);
+    });
   });
 });
