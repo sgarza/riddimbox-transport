@@ -39,7 +39,8 @@ export default [
         format: "umd",
         sourcemap: true,
         name: moduleName,
-        banner
+        banner,
+        extend: true
       }
     ],
     plugins: [
