@@ -47,7 +47,7 @@ describe("Metronome", () => {
     };
   });
 
-  describe("When the provider is not set", () => {
+  describe("When the provider or tap-tempo are not set", () => {
     it("should throw if no provider is set", () => {
       const wrapper = () => {
         new Metronome();
@@ -56,9 +56,28 @@ describe("Metronome", () => {
         "You need to set a provider first. Try with the ToneMetronomeProvider class."
       );
     });
+
+    it("should throw if no tap-tempo lib instance is provided", () => {
+      const Tone = { ...mockTone };
+
+      const toneTransportProvider = new ToneTransportProvider(Tone);
+      Transport.provider = toneTransportProvider;
+
+      const provider = new ToneMetronomeProvider(Transport);
+
+      const wrapper = () => {
+        new Metronome(provider);
+      };
+
+      expect(wrapper).toThrow(
+        "tap-tempo library instance must be provided as second argument"
+      );
+    });
   });
 
-  describe("when provider is set", () => {
+  describe("when provider & tap-tempo are set", () => {
+    const tapTempo = { tap: () => {}, on: () => {} };
+
     it("should create an instance of Metronome", () => {
       const Tone = { ...mockTone };
 
@@ -66,7 +85,7 @@ describe("Metronome", () => {
       Transport.provider = toneTransportProvider;
       const spy = jest.spyOn(Tone, "Synth");
       const provider = new ToneMetronomeProvider(Transport);
-      const metronome = new Metronome(provider);
+      const metronome = new Metronome(provider, tapTempo);
 
       expect(spy).toHaveBeenCalled();
       expect(metronome).toBeInstanceOf(Metronome);
@@ -79,7 +98,7 @@ describe("Metronome", () => {
       Transport.provider = toneTransportProvider;
 
       const provider = new ToneMetronomeProvider(Transport);
-      const metronome = new Metronome(provider);
+      const metronome = new Metronome(provider, tapTempo);
 
       const triggerAttackReleaseSpy = jest.spyOn(
         provider.synth,
@@ -101,7 +120,7 @@ describe("Metronome", () => {
       Transport.provider = toneTransportProvider;
 
       const provider = new ToneMetronomeProvider(Transport);
-      const metronome = new Metronome(provider);
+      const metronome = new Metronome(provider, tapTempo);
 
       const triggerAttackReleaseSpy = jest.spyOn(
         provider.synth,
@@ -127,64 +146,46 @@ describe("Metronome", () => {
       );
       expect(metronome).toBeInstanceOf(Metronome);
     });
-  });
 
-  it("should connect its output to another node", () => {
-    const Tone = { ...mockTone };
-    const AudioNode = {};
+    it("should connect its output to another node", () => {
+      const Tone = { ...mockTone };
+      const AudioNode = {};
 
-    const toneTransportProvider = new ToneTransportProvider(Tone);
-    Transport.provider = toneTransportProvider;
+      const toneTransportProvider = new ToneTransportProvider(Tone);
+      Transport.provider = toneTransportProvider;
 
-    const provider = new ToneMetronomeProvider(Transport);
-    const metronome = new Metronome(provider);
+      const provider = new ToneMetronomeProvider(Transport);
+      const metronome = new Metronome(provider, tapTempo);
 
-    const spy = jest.spyOn(provider.synth, "connect");
+      const spy = jest.spyOn(provider.synth, "connect");
 
-    metronome.connect(AudioNode);
+      metronome.connect(AudioNode);
 
-    expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenCalledWith(AudioNode);
-    expect(metronome).toBeInstanceOf(Metronome);
-  });
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledWith(AudioNode);
+      expect(metronome).toBeInstanceOf(Metronome);
+    });
 
-  it("should throw if no tap-tempo lib instance is provided", () => {
-    const Tone = { ...mockTone };
+    it("should set a tempo on the Transport by tapping", () => {
+      const Tone = { ...mockTone };
 
-    const toneTransportProvider = new ToneTransportProvider(Tone);
-    Transport.provider = toneTransportProvider;
+      const toneTransportProvider = new ToneTransportProvider(Tone);
+      Transport.provider = toneTransportProvider;
 
-    const provider = new ToneMetronomeProvider(Transport);
+      const provider = new ToneMetronomeProvider(Transport);
+      const metronome = new Metronome(provider, tapTempo);
 
-    const wrapper = () => {
-      new Metronome(provider);
-    };
+      const spy = jest.spyOn(metronome, "tap");
+      expect(Transport.bpm).toBe(120);
 
-    expect(wrapper).toThrow(
-      "tap-tempo library instance must be provided as second argument"
-    );
-  });
+      const simulatedTempo = 92;
+      for (let index = 0; index < 4; index++) {
+        metronome.tap();
+        if (index === 3) metronome._onTapTempoHandler(simulatedTempo);
+      }
 
-  it("should set a tempo on the Transport by tapping", () => {
-    const Tone = { ...mockTone };
-    const tapTempo = { tap: () => {}, on: () => {} };
-
-    const toneTransportProvider = new ToneTransportProvider(Tone);
-    Transport.provider = toneTransportProvider;
-
-    const provider = new ToneMetronomeProvider(Transport);
-    const metronome = new Metronome(provider, tapTempo);
-
-    const spy = jest.spyOn(metronome, "tap");
-    expect(Transport.bpm).toBe(120);
-
-    const simulatedTempo = 92;
-    for (let index = 0; index < 4; index++) {
-      metronome.tap();
-      if (index === 3) metronome._onTapTempoHandler(simulatedTempo);
-    }
-
-    expect(spy).toHaveBeenCalledTimes(4);
-    expect(Transport.bpm).toBe(simulatedTempo);
+      expect(spy).toHaveBeenCalledTimes(4);
+      expect(Transport.bpm).toBe(simulatedTempo);
+    });
   });
 });
