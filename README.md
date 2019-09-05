@@ -31,7 +31,7 @@ const transportProvider = new ToneTransportProvider(Tone);
 Transport.provider = transportProvider;
 
 const metronomeProvider = new ToneMetronomeProvider(Transport);
-const metronome = new Metronome(metronomeProvider);
+const metronome = new Metronome(metronomeProvider, tapTempo);
 ```
 
 ## License
