@@ -1,4 +1,4 @@
-import EventEmmiter from "eventemitter3";
+import EventEmmiter from "events";
 
 import constants from "../constants";
 const { DEFAULT_TIME_SIGNATURE_VALUE, PPQN } = constants;
