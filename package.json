@@ -35,7 +35,8 @@
     "rollup-plugin-multi-entry": "^2.1.0",
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-resolve": "^4.2.3",
-    "serve": "^11.1.0"
+    "serve": "^11.1.0",
+    "tone": "^13.8.25"
   },
   "dependencies": {
     "tap-tempo": "^0.1.1"
