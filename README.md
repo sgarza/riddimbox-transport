@@ -9,7 +9,6 @@ WIP: A library that provides an abstraction of a Transport and a Metronome with 
 
 This library needs you to provide:
 
-- an instance of https://github.com/livejs/tap-tempo;
 - A reference of main `Tone` object from https://github.com/Tonejs/Tone.js
 
 ## Usage
@@ -18,7 +17,6 @@ This library needs you to provide:
 
 ```javascript
 import Tone from "tone";
-import TapTempo from "tap-tempo";
 import {
   Transport,
   Metronome,
@@ -26,12 +24,11 @@ import {
   ToneMetronomeProvider
 } from "@riddimbox-transport";
 
-const tapTempo = TapTempo();
 const transportProvider = new ToneTransportProvider(Tone);
 Transport.provider = transportProvider;
 
 const metronomeProvider = new ToneMetronomeProvider(Transport);
-const metronome = new Metronome(metronomeProvider, tapTempo);
+const metronome = new Metronome(metronomeProvider);
 ```
 
 ## License
