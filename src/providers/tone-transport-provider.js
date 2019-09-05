@@ -73,13 +73,12 @@ class ToneTransportProvider extends EventEmmiter {
 
   start() {
     this.engine.Transport.start();
-    this.emit("bar", this.bars);
-    this.emit("beat", this.beats);
-    this.emit("tick", this.ticks);
+    this._emitCounters();
   }
 
   stop() {
     this.engine.Transport.stop();
+    this._resetCounters();
   }
 
   _validateTimeSignature(timeSignature) {
@@ -115,6 +114,18 @@ class ToneTransportProvider extends EventEmmiter {
 
     this.emit("tick", this.ticks);
   };
+
+  _emitCounters() {
+    this.emit("bar", this.bars);
+    this.emit("beat", this.beats);
+    this.emit("tick", this.ticks);
+  }
+
+  _resetCounters() {
+    this._ticks = 0;
+    this._beats = 0;
+    this._bars = 0;
+  }
 }
 
 export default ToneTransportProvider;
