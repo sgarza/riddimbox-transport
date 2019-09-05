@@ -1,12 +1,13 @@
-let _provider = null;
 class Transport {
+  static _provider = null;
+
   static get provider() {
     Transport._throwIfProviderNotSet();
-    return _provider;
+    return Transport._provider;
   }
 
   static set provider(provider) {
-    _provider = provider;
+    Transport._provider = provider;
   }
 
   static get state() {
@@ -70,7 +71,7 @@ class Transport {
   }
 
   static _throwIfProviderNotSet() {
-    if (!_provider) {
+    if (!Transport._provider) {
       throw new Error(
         "You need to set a provider first. Try with the ToneTransportProvider class."
       );
