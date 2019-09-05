@@ -27,13 +27,13 @@ class ToneMetronomeProvider {
     this.synth.connect(audioNode);
   }
 
-  _repeatHandler(time) {
+  _repeatHandler = time => {
     if (this.transport.beats === 0) {
       this.synth.triggerAttackRelease("G4", "16n", time);
     } else {
       this.synth.triggerAttackRelease("C4", "16n", time);
     }
-  }
+  };
 }
 
 export default ToneMetronomeProvider;
