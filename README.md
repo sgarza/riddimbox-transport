@@ -13,10 +13,15 @@ This library needs you to provide:
 
 ### Initialization
 
-```
+```javascript
 import Tone from "tone";
-import TapTempo from "tap-tempo"
-import { Transport, Metronome, ToneTransportProvider, ToneMetronomeProvider } from "@riddimbox-transport";
+import TapTempo from "tap-tempo";
+import {
+  Transport,
+  Metronome,
+  ToneTransportProvider,
+  ToneMetronomeProvider
+} from "@riddimbox-transport";
 
 const tapTempo = TapTempo();
 const transportProvider = new ToneTransportProvider(Tone);
@@ -24,7 +29,6 @@ Transport.provider = transportProvider;
 
 const metronomeProvider = new ToneMetronomeProvider(Transport);
 const metronome = new Metronome(metronomeProvider);
-
 ```
 
 ## License
