@@ -7,6 +7,8 @@
  * @preserve
  */
 
+import events from 'events';
+
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -174,22 +176,63 @@ function () {
   return Transport;
 }();
 
+var EventEmitter = events.EventEmitter;
+
+var tapTempo = function(){
+  var tapTempo = new EventEmitter();
+
+  var timeout = 2000;
+
+  var times = [];
+  var lastTime = null;
+  var lastDifference = null;
+
+  tapTempo.tap = function(){
+    var time = Date.now();
+    if (lastTime){
+      lastDifference = time - lastTime;
+      times.push(lastDifference);
+      refresh();
+    }
+    lastTime = time;
+    beginTimeout();
+    tapTempo.emit('tap');
+  };
+
+  function refresh(){
+    if (times.length > 2){
+      var average = times.reduce(function(result, t){ return result += t }) / times.length;
+      var bpm = (1 / (average / 1000)) * 60;
+      tapTempo.emit('tempo', bpm);
+    }
+  }
+
+  var timer = null;
+  function beginTimeout(){
+    clearTimeout(timer);
+    timer = setTimeout(function(){
+      times = [lastDifference];
+      lastTime = null;
+    }, timeout);
+  }
+
+  return tapTempo
+};
+
+var tapTempo$1 = tapTempo();
+
 var Metronome =
 /*#__PURE__*/
 function () {
-  function Metronome(provider, tapTempo) {
+  function Metronome(provider) {
     _classCallCheck(this, Metronome);
 
     if (!provider) {
       throw new Error("You need to set a provider first. Try with the ToneMetronomeProvider class.");
     }
 
-    if (!tapTempo) {
-      throw new Error("tap-tempo library instance must be provided as second argument");
-    }
-
     this.provider = provider;
-    this.tapTempo = tapTempo;
+    this.tapTempo = tapTempo$1;
     this.tapTempo.on("tempo", this._onTapTempoHandler);
   }
 
