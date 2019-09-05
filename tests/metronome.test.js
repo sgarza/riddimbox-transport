@@ -147,4 +147,44 @@ describe("Metronome", () => {
     expect(spy).toHaveBeenCalledWith(AudioNode);
     expect(metronome).toBeInstanceOf(Metronome);
   });
+
+  it("should throw if no tap-tempo lib instance is provided", () => {
+    const Tone = { ...mockTone };
+
+    const toneTransportProvider = new ToneTransportProvider(Tone);
+    Transport.provider = toneTransportProvider;
+
+    const provider = new ToneMetronomeProvider(Transport);
+
+    const wrapper = () => {
+      new Metronome(provider);
+    };
+
+    expect(wrapper).toThrow(
+      "tap-tempo library instance must be provided as second argument"
+    );
+  });
+
+  it("should set a tempo on the Transport by tapping", () => {
+    const Tone = { ...mockTone };
+    const tapTempo = { tap: () => {}, on: () => {} };
+
+    const toneTransportProvider = new ToneTransportProvider(Tone);
+    Transport.provider = toneTransportProvider;
+
+    const provider = new ToneMetronomeProvider(Transport);
+    const metronome = new Metronome(provider, tapTempo);
+
+    const spy = jest.spyOn(metronome, "tap");
+    expect(Transport.bpm).toBe(120);
+
+    const simulatedTempo = 92;
+    for (let index = 0; index < 4; index++) {
+      metronome.tap();
+      if (index === 3) metronome._onTapTempoHandler(simulatedTempo);
+    }
+
+    expect(spy).toHaveBeenCalledTimes(4);
+    expect(Transport.bpm).toBe(simulatedTempo);
+  });
 });
