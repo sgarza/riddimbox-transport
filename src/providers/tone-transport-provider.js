@@ -73,9 +73,9 @@ class ToneTransportProvider extends EventEmmiter {
 
   start() {
     this.engine.Transport.start();
-    this.emit("tick", this.ticks);
-    this.emit("beat", this.beats);
     this.emit("bar", this.bars);
+    this.emit("beat", this.beats);
+    this.emit("tick", this.ticks);
   }
 
   stop() {
@@ -99,20 +99,22 @@ class ToneTransportProvider extends EventEmmiter {
     }
   }
 
-  _tickHandler() {
+  _tickHandler = () => {
     this._ticks += 1;
-    this.emit("tick", this.ticks);
 
     if (this._ticks % PPQN === 0) {
       this._beats += 1;
-      this.emit("beat", this.beats);
 
       if (this._beats % this.timeSignature[0] === 0) {
         this._bars += 1;
         this.emit("bar", this.bars);
       }
+
+      this.emit("beat", this.beats);
     }
-  }
+
+    this.emit("tick", this.ticks);
+  };
 }
 
 export default ToneTransportProvider;
