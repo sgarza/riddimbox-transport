@@ -7,14 +7,56 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Transport Example</title>
 
+  <script src="../node_modules/tone/build/Tone.js"></script>
   <script src="../dist/index.umd.bundle.js"></script>
 
 </head>
 
 <body>
 
+  <button id="toneStart">Start Tone Audio ctx</button>
+  <button id="start">Start</button>
+  <button id="stop">Stop</button>
+
   <script>
-    console.log(window, window.RiddimBox);
+    const {
+      Transport,
+      Metronome,
+      ToneTransportProvider,
+      ToneMetronomeProvider
+    } = window.RiddimBox;
+
+    const transportProvider = new ToneTransportProvider(Tone);
+    Transport.provider = transportProvider;
+
+    const metronomeProvider = new ToneMetronomeProvider(Transport);
+    const metronome = new Metronome(metronomeProvider);
+
+    metronome.connect(Tone.Master);
+
+    const onStartTone = () => {
+      console.log("tone ctx start");
+      Tone.start();
+    }
+
+    const onStart = () => {
+      console.log("start");
+      Transport.start();
+    }
+
+    const onStop = () => {
+      console.log("stop");
+      Transport.stop();
+    }
+
+    // Transport.on("tick", (tick) => console.log("tick", tick));
+    Transport.on("beat", (beat) => console.log("beat", beat));
+    Transport.on("bar", (bar) => console.log("bar", bar));
+
+
+    document.getElementById("toneStart").addEventListener("click", onStartTone);
+    document.getElementById("start").addEventListener("click", onStart);
+    document.getElementById("stop").addEventListener("click", onStop);
 
   </script>
 
