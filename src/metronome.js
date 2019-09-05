@@ -1,14 +1,12 @@
+import TapTempo from "tap-tempo";
+
+const tapTempo = TapTempo();
+
 class Metronome {
-  constructor(provider, tapTempo) {
+  constructor(provider) {
     if (!provider) {
       throw new Error(
         "You need to set a provider first. Try with the ToneMetronomeProvider class."
-      );
-    }
-
-    if (!tapTempo) {
-      throw new Error(
-        "tap-tempo library instance must be provided as second argument"
       );
     }
 

@@ -56,23 +56,6 @@ describe("Metronome", () => {
         "You need to set a provider first. Try with the ToneMetronomeProvider class."
       );
     });
-
-    it("should throw if no tap-tempo lib instance is provided", () => {
-      const Tone = { ...mockTone };
-
-      const toneTransportProvider = new ToneTransportProvider(Tone);
-      Transport.provider = toneTransportProvider;
-
-      const provider = new ToneMetronomeProvider(Transport);
-
-      const wrapper = () => {
-        new Metronome(provider);
-      };
-
-      expect(wrapper).toThrow(
-        "tap-tempo library instance must be provided as second argument"
-      );
-    });
   });
 
   describe("when provider & tap-tempo are set", () => {
@@ -173,7 +156,10 @@ describe("Metronome", () => {
       Transport.provider = toneTransportProvider;
 
       const provider = new ToneMetronomeProvider(Transport);
-      const metronome = new Metronome(provider, tapTempo);
+      const metronome = new Metronome(provider);
+
+      // mock tapTempo
+      metronome.tapTempo = tapTempo;
 
       const spy = jest.spyOn(metronome, "tap");
       expect(Transport.bpm).toBe(120);
