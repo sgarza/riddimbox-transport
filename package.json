@@ -7,7 +7,8 @@
   "moduleName": "RiddimBox",
   "scripts": {
     "build": "BABEL_ENV=build rollup -c",
-    "test": "BABEL_ENV=test jest --coverage --colors"
+    "test": "BABEL_ENV=test jest --coverage --colors",
+    "examples": "open-cli http://localhost:9898/examples && serve -l 9898"
   },
   "author": "Sergio de la Garza",
   "license": "MIT",
@@ -26,13 +27,15 @@
     "eslint-plugin-jest": "^22.16.0",
     "eslint-plugin-prettier": "^3.1.0",
     "jest": "^24.9.0",
+    "open-cli": "^5.0.0",
     "prettier": "^1.18.2",
     "rollup": "^1.10.0",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^9.3.4",
     "rollup-plugin-multi-entry": "^2.1.0",
     "rollup-plugin-node-builtins": "^2.1.2",
-    "rollup-plugin-node-resolve": "^4.2.3"
+    "rollup-plugin-node-resolve": "^4.2.3",
+    "serve": "^11.1.0"
   },
   "dependencies": {
     "tap-tempo": "^0.1.1"
