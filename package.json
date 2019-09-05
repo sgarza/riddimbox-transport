@@ -32,5 +32,8 @@
     "rollup-plugin-commonjs": "^9.3.4",
     "rollup-plugin-multi-entry": "^2.1.0",
     "rollup-plugin-node-resolve": "^4.2.3"
+  },
+  "dependencies": {
+    "eventemitter3": "^4.0.0"
   }
 }
