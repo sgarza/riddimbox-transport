@@ -1,3 +1,6 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/160ab9c7c5cf043611d2/maintainability)](https://codeclimate.com/github/sgarza/riddimbox-transport/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/160ab9c7c5cf043611d2/test_coverage)](https://codeclimate.com/github/sgarza/riddimbox-transport/test_coverage)
+
 # RiddimBox - Transport
 
 WIP: A library that provides an abstraction of a Transport and a Metronome with support for multiple backends, currently it has support for `Tone.js`
