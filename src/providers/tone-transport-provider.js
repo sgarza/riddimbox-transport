@@ -54,8 +54,11 @@ class ToneTransportProvider extends EventEmmiter {
   }
 
   set timeSignature(val) {
-    const [beats, bars] = val;
-    const timeSignature = [parseInt(beats, 10), parseInt(bars, 10)];
+    const timeSignature = [];
+
+    (Array.isArray(val) ? val : [val]).forEach(v => {
+      timeSignature.push(parseInt(v, 10));
+    });
 
     this._validateTimeSignature(timeSignature);
     this._timeSignature = timeSignature;
@@ -87,10 +90,6 @@ class ToneTransportProvider extends EventEmmiter {
 
   _validateTimeSignature(timeSignature) {
     const validBars = [4, 8];
-    if (!Array.isArray(timeSignature)) {
-      throw new Error("Time signature must an array, ex: [4, 4]");
-    }
-
     if (timeSignature.length !== 2) {
       throw new Error(
         "Time signature must an array of 2 positions, ex: [4, 4]"
@@ -105,7 +104,7 @@ class ToneTransportProvider extends EventEmmiter {
   _tickHandler = () => {
     this._ticks += 1;
 
-    if (this._ticks % PPQN === 0) {
+    if (this._ticks % this._pulsesPerBeat() === 0) {
       this._beats += 1;
 
       if (this._beats % this.timeSignature[0] === 0) {
@@ -118,6 +117,10 @@ class ToneTransportProvider extends EventEmmiter {
 
     this.emit("tick", this.ticks);
   };
+
+  _pulsesPerBeat() {
+    return PPQN / (this._timeSignature[1] / 4);
+  }
 
   _emitCounters() {
     this.emit("bar", this.bars);
