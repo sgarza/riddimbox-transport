@@ -7,6 +7,8 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Transport Example</title>
 
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <script src="../node_modules/tone/build/Tone.js"></script>
   <script src="../dist/index.umd.bundle.js"></script>
 
@@ -14,9 +16,45 @@
 
 <body>
 
-  <button id="toneStart">Start Tone Audio ctx</button>
-  <button id="start">Start</button>
-  <button id="stop">Stop</button>
+  <div class="container transport">
+    <div class="row main">
+      <div class="container py-3">
+        <button id="toneStart" class="btn-danger mr-1">Start Tone Audio ctx first</button>
+        <button id="start" class="btn-primary mr-1">Start</button>
+        <button id="stop" class="btn-secondary">Stop</button>
+      </div>
+
+    </div>
+    <div class="row metronome">
+      <div class="container py-3">
+        <label>Tempo: </label>
+        <input id="bpm" type="number" min="30" max="400">
+
+        <label>Time Signature</label>
+        <select id="timeSignature1">
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+        </select>
+        /
+        <select id="timeSignature2">
+          <option value="4">4</option>
+          <option value="8">8</option>
+        </select>
+      </div>
+
+
+    </div>
+  </div>
+
 
   <script>
     const {
@@ -58,8 +96,43 @@
     document.getElementById("start").addEventListener("click", onStart);
     document.getElementById("stop").addEventListener("click", onStop);
 
+    const bpmEl = document.getElementById("bpm");
+    bpmEl.value = Transport.bpm;
+
+    const onBPMChange = (e) => {
+      Transport.bpm = e.target.value;
+    };
+    bpmEl.addEventListener("change", onBPMChange);
+
+    timeSignatureBeatsEl = document.getElementById("timeSignature1");
+    timeSignatureBeatsEl.value = Transport.timeSignature[0];
+
+    timeSignatureBarsEl = document.getElementById("timeSignature2");
+    timeSignatureBarsEl.value = Transport.timeSignature[1];
+
+    const onTimeSignatureBeatsChange = (e) => {
+      Transport.timeSignature = [e.target.value, Transport.timeSignature[1]];
+    }
+
+    const onTimeSignatureBarsChange = (e) => {
+      Transport.timeSignature = [Transport.timeSignature[0], e.target.value];
+    }
+
+    timeSignatureBeatsEl.addEventListener("change", onTimeSignatureBeatsChange);
+    timeSignatureBarsEl.addEventListener("change", onTimeSignatureBarsChange);
+
   </script>
 
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+  </script>
+</body>
 </body>
 
 </html>
