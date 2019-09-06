@@ -194,6 +194,25 @@ describe("Transport", () => {
       expect(wrapper).toThrow("Invalid time signature");
     });
 
+    it("should throw if time signature if not an array", () => {
+      const Tone = {
+        Transport: {
+          ...mockToneTransport
+        }
+      };
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      const wrapper = () => {
+        Transport.timeSignature = 4;
+      };
+
+      expect(wrapper).toThrow(
+        "Time signature must an array of 2 positions, ex: [4, 4]"
+      );
+    });
+
     it("should throw if time signature if not an array of 2 positions", () => {
       const Tone = {
         Transport: {
