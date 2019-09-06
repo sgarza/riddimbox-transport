@@ -53,10 +53,14 @@ class ToneTransportProvider extends EventEmmiter {
     return this._timeSignature;
   }
 
-  set timeSignature(timeSignature) {
+  set timeSignature(val) {
+    const [beats, bars] = val;
+    const timeSignature = [parseInt(beats, 10), parseInt(bars, 10)];
+
     this._validateTimeSignature(timeSignature);
     this._timeSignature = timeSignature;
     this.engine.Transport.timeSignature = timeSignature;
+    this.emit("timeSignature", timeSignature);
   }
 
   get ticks() {

@@ -33,7 +33,8 @@ describe("Metronome", () => {
       swing: DEFAULT_SWING_VALUE,
       swingSubdivision: DEFAULT_SWING_SUBDIVISION_VALUE,
       timeSignature: DEFAULT_TIME_SIGNATURE_VALUE,
-      scheduleRepeat: () => {}
+      scheduleRepeat: () => {},
+      clear: () => {}
     };
 
     mockTone = {
@@ -172,6 +173,22 @@ describe("Metronome", () => {
 
       expect(spy).toHaveBeenCalledTimes(4);
       expect(Transport.bpm).toBe(simulatedTempo);
+    });
+
+    it("should execute its internal timeSignature handler when the time signature changes", () => {
+      const Tone = { ...mockTone };
+
+      const toneTransportProvider = new ToneTransportProvider(Tone);
+      Transport.provider = toneTransportProvider;
+
+      const provider = new ToneMetronomeProvider(Transport);
+
+      const spy = jest.spyOn(provider, "_scheduleToneEvent");
+
+      Transport.timeSignature = [2, 4];
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(provider.toneEventID).not.toBe(null);
     });
   });
 });

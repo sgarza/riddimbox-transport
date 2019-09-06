@@ -15,16 +15,22 @@ class ToneMetronomeProvider {
       }
     });
 
-    const repeatEachBarSubdivision = `${this.transport.timeSignature[1]}n`;
+    this.toneEventID = null;
 
-    this.engine.Transport.scheduleRepeat(
-      this._repeatHandler,
-      repeatEachBarSubdivision
-    );
+    this._scheduleToneEvent();
+
+    Transport.on("timeSignature", this._timeSignatureChange);
   }
 
   connect(audioNode) {
     this.synth.connect(audioNode);
+  }
+
+  _scheduleToneEvent() {
+    this.toneEventID = this.engine.Transport.scheduleRepeat(
+      this._repeatHandler,
+      `${this.transport.timeSignature[1]}n`
+    );
   }
 
   _repeatHandler = time => {
@@ -33,6 +39,11 @@ class ToneMetronomeProvider {
     } else {
       this.synth.triggerAttackRelease("C4", "16n", time);
     }
+  };
+
+  _timeSignatureChange = () => {
+    this.engine.Transport.clear(this.toneEventID);
+    this._scheduleToneEvent();
   };
 }
 

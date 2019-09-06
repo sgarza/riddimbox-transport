@@ -453,5 +453,24 @@ describe("Transport", () => {
       expect(eventHandler.mock.results[1].value).toBe(0);
       expect(eventHandler.mock.results[2].value).toBe(0);
     });
+
+    it("should emit a timeSignature event when changin the time signature", () => {
+      const Tone = {
+        Transport: {
+          ...mockToneTransport
+        }
+      };
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      const eventHandler = jest.fn(x => x);
+
+      Transport.on("timeSignature", eventHandler);
+
+      Transport.timeSignature = [2, 4];
+
+      expect(eventHandler).toHaveBeenCalledTimes(1);
+    });
   });
 });
