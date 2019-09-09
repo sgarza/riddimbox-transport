@@ -18,9 +18,15 @@ const {
 
 let mockToneTransport;
 let mockTone;
+let synthInstance;
 
 describe("Metronome", () => {
   beforeEach(() => {
+    synthInstance = {
+      triggerAttackRelease: () => {},
+      connect: () => {}
+    };
+
     mockToneTransport = {
       start: () => {
         mockToneTransport.state = TRANSPORT_STARTED;
@@ -40,10 +46,7 @@ describe("Metronome", () => {
     mockTone = {
       Transport: { ...mockToneTransport, state: TRANSPORT_STARTED },
       Synth: () => {
-        return {
-          triggerAttackRelease: () => {},
-          connect: () => {}
-        };
+        return synthInstance;
       }
     };
   });
@@ -189,6 +192,59 @@ describe("Metronome", () => {
 
       expect(spy).toHaveBeenCalledTimes(1);
       expect(provider.toneEventID).not.toBe(null);
+    });
+
+    it("should disable the metronome", () => {
+      const Tone = { ...mockTone };
+
+      const toneTransportProvider = new ToneTransportProvider(Tone);
+      Transport.provider = toneTransportProvider;
+
+      const provider = new ToneMetronomeProvider(Transport);
+      const metronome = new Metronome(provider);
+
+      const spy = jest.spyOn(synthInstance, "triggerAttackRelease");
+
+      metronome.disable();
+      toneTransportProvider._tickHandler();
+      provider._repeatHandler();
+
+      expect(spy).not.toHaveBeenCalled();
+    });
+
+    it("should enable the metronome", () => {
+      const Tone = { ...mockTone };
+
+      const toneTransportProvider = new ToneTransportProvider(Tone);
+      Transport.provider = toneTransportProvider;
+
+      const provider = new ToneMetronomeProvider(Transport);
+      const metronome = new Metronome(provider);
+
+      const spy = jest.spyOn(synthInstance, "triggerAttackRelease");
+
+      metronome.disable();
+      metronome.enable();
+      toneTransportProvider._tickHandler();
+      provider._repeatHandler();
+
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should expose its enabled status", () => {
+      const Tone = { ...mockTone };
+
+      const toneTransportProvider = new ToneTransportProvider(Tone);
+      Transport.provider = toneTransportProvider;
+
+      const provider = new ToneMetronomeProvider(Transport);
+      const metronome = new Metronome(provider);
+
+      expect(metronome.isEnabled()).toBe(true);
+
+      metronome.disable();
+
+      expect(metronome.isEnabled()).toBe(false);
     });
   });
 });

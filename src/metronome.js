@@ -20,6 +20,18 @@ class Metronome {
     this.provider.connect(audioNode);
   }
 
+  disable() {
+    this.provider.disable();
+  }
+
+  enable() {
+    this.provider.enable();
+  }
+
+  isEnabled() {
+    return this.provider.isEnabled();
+  }
+
   tap() {
     this.tapTempo.tap();
   }

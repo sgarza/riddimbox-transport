@@ -16,6 +16,7 @@ class ToneMetronomeProvider {
     });
 
     this.toneEventID = null;
+    this._isEnabled = true;
 
     this._scheduleToneEvent();
 
@@ -26,6 +27,18 @@ class ToneMetronomeProvider {
     this.synth.connect(audioNode);
   }
 
+  disable() {
+    this._isEnabled = false;
+  }
+
+  enable() {
+    this._isEnabled = true;
+  }
+
+  isEnabled() {
+    return this._isEnabled;
+  }
+
   _scheduleToneEvent() {
     this.toneEventID = this.engine.Transport.scheduleRepeat(
       this._repeatHandler,
@@ -34,6 +47,8 @@ class ToneMetronomeProvider {
   }
 
   _repeatHandler = time => {
+    if (!this._isEnabled) return;
+
     if (this.transport.beats === 0) {
       this.synth.triggerAttackRelease("G4", "16n", time);
     } else {
