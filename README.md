@@ -35,7 +35,7 @@ metronome.connect(Tone.Master);
 
 ## Demo
 
-To run a demo just run `npm run demo`
+`npm run demo` will start a local http server and launch your default browser to `http://localhost:9898/examples`
 
 ## License
 
