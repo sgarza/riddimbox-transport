@@ -240,11 +240,11 @@ describe("Metronome", () => {
       const provider = new ToneMetronomeProvider(Transport);
       const metronome = new Metronome(provider);
 
-      expect(metronome.isEnabled()).toBe(true);
+      expect(metronome.isEnabled).toBe(true);
 
       metronome.disable();
 
-      expect(metronome.isEnabled()).toBe(false);
+      expect(metronome.isEnabled).toBe(false);
     });
   });
 });

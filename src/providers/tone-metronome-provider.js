@@ -23,6 +23,10 @@ class ToneMetronomeProvider {
     Transport.on("timeSignature", this._timeSignatureChange);
   }
 
+  get isEnabled() {
+    return this._isEnabled;
+  }
+
   connect(audioNode) {
     this.synth.connect(audioNode);
   }
@@ -33,10 +37,6 @@ class ToneMetronomeProvider {
 
   enable() {
     this._isEnabled = true;
-  }
-
-  isEnabled() {
-    return this._isEnabled;
   }
 
   _scheduleToneEvent() {

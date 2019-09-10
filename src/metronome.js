@@ -16,6 +16,10 @@ class Metronome {
     this.tapTempo.on("tempo", this._onTapTempoHandler);
   }
 
+  get isEnabled() {
+    return this.provider.isEnabled;
+  }
+
   connect(audioNode) {
     this.provider.connect(audioNode);
   }
@@ -26,10 +30,6 @@ class Metronome {
 
   enable() {
     this.provider.enable();
-  }
-
-  isEnabled() {
-    return this.provider.isEnabled();
   }
 
   tap() {
