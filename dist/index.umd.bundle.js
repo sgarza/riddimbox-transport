@@ -727,6 +727,21 @@
         this.provider.connect(audioNode);
       }
     }, {
+      key: "disable",
+      value: function disable() {
+        this.provider.disable();
+      }
+    }, {
+      key: "enable",
+      value: function enable() {
+        this.provider.enable();
+      }
+    }, {
+      key: "isEnabled",
+      value: function isEnabled() {
+        return this.provider.isEnabled();
+      }
+    }, {
       key: "tap",
       value: function tap() {
         this.tapTempo.tap();
@@ -771,7 +786,7 @@
       _defineProperty(_assertThisInitialized(_this), "_tickHandler", function () {
         _this._ticks += 1;
 
-        if (_this._ticks % PPQN === 0) {
+        if (_this._ticks % _this.pulsesPerBeat === 0) {
           _this._beats += 1;
 
           if (_this._beats % _this.timeSignature[0] === 0) {
@@ -799,23 +814,20 @@
       key: "start",
       value: function start() {
         this.engine.Transport.start();
-        this.emit("bar", this.bars);
-        this.emit("beat", this.beats);
-        this.emit("tick", this.ticks);
+
+        this._emitCounters();
       }
     }, {
       key: "stop",
       value: function stop() {
         this.engine.Transport.stop();
+
+        this._resetCounters();
       }
     }, {
       key: "_validateTimeSignature",
       value: function _validateTimeSignature(timeSignature) {
         var validBars = [4, 8];
-
-        if (!Array.isArray(timeSignature)) {
-          throw new Error("Time signature must an array, ex: [4, 4]");
-        }
 
         if (timeSignature.length !== 2) {
           throw new Error("Time signature must an array of 2 positions, ex: [4, 4]");
@@ -824,6 +836,20 @@
         if (!validBars.includes(timeSignature[1])) {
           throw new Error("Invalid time signature");
         }
+      }
+    }, {
+      key: "_emitCounters",
+      value: function _emitCounters() {
+        this.emit("bar", this.bars);
+        this.emit("beat", this.beats);
+        this.emit("tick", this.ticks);
+      }
+    }, {
+      key: "_resetCounters",
+      value: function _resetCounters() {
+        this._ticks = 0;
+        this._beats = 0;
+        this._bars = 0;
       }
     }, {
       key: "state",
@@ -865,11 +891,17 @@
       get: function get() {
         return this._timeSignature;
       },
-      set: function set(timeSignature) {
+      set: function set(val) {
+        var timeSignature = [];
+        (Array.isArray(val) ? val : [val]).forEach(function (v) {
+          timeSignature.push(parseInt(v, 10));
+        });
+
         this._validateTimeSignature(timeSignature);
 
         this._timeSignature = timeSignature;
         this.engine.Transport.timeSignature = timeSignature;
+        this.emit("timeSignature", timeSignature);
       }
     }, {
       key: "ticks",
@@ -886,6 +918,11 @@
       get: function get() {
         return this._bars % this.timeSignature[1];
       }
+    }, {
+      key: "pulsesPerBeat",
+      get: function get() {
+        return PPQN / (this._timeSignature[1] / 4);
+      }
     }]);
 
     return ToneTransportProvider;
@@ -900,11 +937,19 @@
       _classCallCheck(this, ToneMetronomeProvider);
 
       _defineProperty(this, "_repeatHandler", function (time) {
+        if (!_this._isEnabled) return;
+
         if (_this.transport.beats === 0) {
           _this.synth.triggerAttackRelease("G4", "16n", time);
         } else {
           _this.synth.triggerAttackRelease("C4", "16n", time);
         }
+      });
+
+      _defineProperty(this, "_timeSignatureChange", function () {
+        _this.engine.Transport.clear(_this.toneEventID);
+
+        _this._scheduleToneEvent();
       });
 
       this.transport = Transport;
@@ -921,14 +966,38 @@
           release: 0.05
         }
       });
-      var repeatEachBarSubdivision = "".concat(this.transport.timeSignature[1], "n");
-      this.engine.Transport.scheduleRepeat(this._repeatHandler, repeatEachBarSubdivision);
+      this.toneEventID = null;
+      this._isEnabled = true;
+
+      this._scheduleToneEvent();
+
+      Transport.on("timeSignature", this._timeSignatureChange);
     }
 
     _createClass(ToneMetronomeProvider, [{
       key: "connect",
       value: function connect(audioNode) {
         this.synth.connect(audioNode);
+      }
+    }, {
+      key: "disable",
+      value: function disable() {
+        this._isEnabled = false;
+      }
+    }, {
+      key: "enable",
+      value: function enable() {
+        this._isEnabled = true;
+      }
+    }, {
+      key: "isEnabled",
+      value: function isEnabled() {
+        return this._isEnabled;
+      }
+    }, {
+      key: "_scheduleToneEvent",
+      value: function _scheduleToneEvent() {
+        this.toneEventID = this.engine.Transport.scheduleRepeat(this._repeatHandler, "".concat(this.transport.timeSignature[1], "n"));
       }
     }]);
 
