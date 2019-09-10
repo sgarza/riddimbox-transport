@@ -737,11 +737,6 @@
         this.provider.enable();
       }
     }, {
-      key: "isEnabled",
-      value: function isEnabled() {
-        return this.provider.isEnabled();
-      }
-    }, {
       key: "tap",
       value: function tap() {
         this.tapTempo.tap();
@@ -750,6 +745,11 @@
       key: "_onTapTempoHandler",
       value: function _onTapTempoHandler(tempo) {
         this.provider.transport.bpm = parseInt(tempo, 10);
+      }
+    }, {
+      key: "isEnabled",
+      get: function get() {
+        return this.provider.isEnabled;
       }
     }]);
 
@@ -990,14 +990,14 @@
         this._isEnabled = true;
       }
     }, {
-      key: "isEnabled",
-      value: function isEnabled() {
-        return this._isEnabled;
-      }
-    }, {
       key: "_scheduleToneEvent",
       value: function _scheduleToneEvent() {
         this.toneEventID = this.engine.Transport.scheduleRepeat(this._repeatHandler, "".concat(this.transport.timeSignature[1], "n"));
+      }
+    }, {
+      key: "isEnabled",
+      get: function get() {
+        return this._isEnabled;
       }
     }]);
 
