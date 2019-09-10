@@ -53,6 +53,11 @@
 
 
     </div>
+    <div class="row metronome-controls">
+      <div class="container py-3">
+        <button id="metronomeToggle" class="btn-success">Toggle metronome</button>
+      </div>
+    </div>
   </div>
 
 
@@ -120,6 +125,20 @@
 
     timeSignatureBeatsEl.addEventListener("change", onTimeSignatureBeatsChange);
     timeSignatureBarsEl.addEventListener("change", onTimeSignatureBarsChange);
+
+    const metronomeToggleEl = document.getElementById("metronomeToggle");
+
+    metronomeToggleEl.addEventListener("click", (event) => {
+      if (metronome.isEnabled) {
+        metronome.disable();
+        metronomeToggleEl.classList.remove("btn-success");
+        metronomeToggleEl.classList.add("btn-danger");
+      } else {
+        metronome.enable();
+        metronomeToggleEl.classList.remove("btn-danger");
+        metronomeToggleEl.classList.add("btn-success");
+      }
+    });
 
   </script>
 

@@ -33,6 +33,10 @@ const metronome = new Metronome(metronomeProvider);
 metronome.connect(Tone.Master);
 ```
 
+## Demo
+
+To run a demo just run `npm run demo`
+
 ## License
 
 [MIT](LICENSE).

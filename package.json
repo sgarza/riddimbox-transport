@@ -8,7 +8,7 @@
   "scripts": {
     "build": "BABEL_ENV=build rollup -c",
     "test": "BABEL_ENV=test jest --coverage --colors",
-    "examples": "open-cli http://localhost:9898/examples && serve -l 9898"
+    "demo": "open-cli http://localhost:9898/examples && serve -l 9898"
   },
   "author": "Sergio de la Garza",
   "license": "MIT",
