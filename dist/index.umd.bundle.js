@@ -97,6 +97,21 @@
     return _assertThisInitialized(self);
   }
 
+  var constants = {
+    TRANSPORT_STARTED: "started",
+    TRANSPORT_STOPPED: "stopped",
+    DEFAULT_BPM_VALUE: 120,
+    DEFAULT_SWING_VALUE: 0,
+    DEFAULT_SWING_SUBDIVISION_VALUE: 8,
+    DEFAULT_TIME_SIGNATURE_VALUE: [4, 4],
+    MIN_TICKS: 0,
+    MAX_TICKS: 191,
+    PPQN: 192
+  };
+
+  var TRANSPORT_STARTED = constants.TRANSPORT_STARTED,
+      TRANSPORT_STOPPED = constants.TRANSPORT_STOPPED;
+
   var Transport =
   /*#__PURE__*/
   function () {
@@ -112,11 +127,13 @@
     }, {
       key: "start",
       value: function start() {
+        if (Transport.state === TRANSPORT_STARTED) return;
         Transport.provider.start();
       }
     }, {
       key: "stop",
       value: function stop() {
+        if (Transport.state === TRANSPORT_STOPPED) return;
         Transport.provider.stop();
       }
     }, {
@@ -756,18 +773,6 @@
     return Metronome;
   }();
 
-  var constants = {
-    TRANSPORT_STARTED: "started",
-    TRANSPORT_STOPPED: "stopped",
-    DEFAULT_BPM_VALUE: 120,
-    DEFAULT_SWING_VALUE: 0,
-    DEFAULT_SWING_SUBDIVISION_VALUE: 8,
-    DEFAULT_TIME_SIGNATURE_VALUE: [4, 4],
-    MIN_TICKS: 0,
-    MAX_TICKS: 191,
-    PPQN: 192
-  };
-
   var DEFAULT_TIME_SIGNATURE_VALUE = constants.DEFAULT_TIME_SIGNATURE_VALUE,
       PPQN = constants.PPQN;
 
@@ -814,6 +819,7 @@
       key: "start",
       value: function start() {
         this.engine.Transport.start();
+        this.emit("start");
 
         this._emitCounters();
       }
@@ -821,6 +827,7 @@
       key: "stop",
       value: function stop() {
         this.engine.Transport.stop();
+        this.emit("stop");
 
         this._resetCounters();
       }
