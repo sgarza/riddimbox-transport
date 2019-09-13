@@ -1,3 +1,6 @@
+import constants from "./constants";
+const { TRANSPORT_STARTED, TRANSPORT_STOPPED } = constants;
+
 class Transport {
   static _provider = null;
 
@@ -63,10 +66,12 @@ class Transport {
   }
 
   static start() {
+    if (Transport.state === TRANSPORT_STARTED) return;
     Transport.provider.start();
   }
 
   static stop() {
+    if (Transport.state === TRANSPORT_STOPPED) return;
     Transport.provider.stop();
   }
 

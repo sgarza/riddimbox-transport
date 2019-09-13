@@ -84,11 +84,13 @@ class ToneTransportProvider extends EventEmmiter {
 
   start() {
     this.engine.Transport.start();
+    this.emit("start");
     this._emitCounters();
   }
 
   stop() {
     this.engine.Transport.stop();
+    this.emit("stop");
     this._resetCounters();
   }
 

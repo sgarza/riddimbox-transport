@@ -12,6 +12,7 @@ const {
 } = constants;
 
 let mockToneTransport;
+let Tone;
 
 const isValidTickValue = ticks => {
   return ticks >= MIN_TICKS && ticks <= MAX_TICKS;
@@ -21,10 +22,10 @@ describe("Transport", () => {
   beforeEach(() => {
     mockToneTransport = {
       start: () => {
-        mockToneTransport.state = TRANSPORT_STARTED;
+        Tone.Transport.state = TRANSPORT_STARTED;
       },
       stop: () => {
-        mockToneTransport.state = TRANSPORT_STOPPED;
+        Tone.Transport.state = TRANSPORT_STOPPED;
       },
       state: TRANSPORT_STOPPED,
       bpm: { value: DEFAULT_BPM_VALUE },
@@ -32,6 +33,10 @@ describe("Transport", () => {
       swingSubdivision: DEFAULT_SWING_SUBDIVISION_VALUE,
       timeSignature: DEFAULT_TIME_SIGNATURE_VALUE,
       scheduleRepeat: () => {}
+    };
+
+    Tone = {
+      Transport: { ...mockToneTransport }
     };
   });
 
@@ -49,9 +54,6 @@ describe("Transport", () => {
 
   describe("When a provider is set", () => {
     it("should start the Transport", () => {
-      const Tone = {
-        Transport: { ...mockToneTransport, state: TRANSPORT_STARTED }
-      };
       const spy = jest.spyOn(Tone.Transport, "start");
 
       const provider = new ToneTransportProvider(Tone);
@@ -59,28 +61,51 @@ describe("Transport", () => {
 
       Transport.start();
 
-      expect(spy).toHaveBeenCalled();
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(Transport.state).toBe(TRANSPORT_STARTED);
+    });
+
+    it("should not start the Transport if its already started", () => {
+      const spy = jest.spyOn(Tone.Transport, "start");
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      Transport.start();
+      Transport.start();
+
+      expect(spy).toHaveBeenCalledTimes(1);
       expect(Transport.state).toBe(TRANSPORT_STARTED);
     });
 
     it("should stop the Transport", () => {
-      const Tone = {
-        Transport: { ...mockToneTransport, state: TRANSPORT_STOPPED }
-      };
       const spy = jest.spyOn(Tone.Transport, "stop");
 
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
 
+      Transport.start();
       Transport.stop();
 
-      expect(spy).toHaveBeenCalled();
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(Transport.state).toBe(TRANSPORT_STOPPED);
+    });
+
+    it("should not stop the Transport if its already stopped", () => {
+      const spy = jest.spyOn(Tone.Transport, "stop");
+
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      Transport.start();
+      Transport.stop();
+      Transport.stop();
+
+      expect(spy).toHaveBeenCalledTimes(1);
       expect(Transport.state).toBe(TRANSPORT_STOPPED);
     });
 
     it("should get the default BPM value", () => {
-      const Tone = { Transport: { ...mockToneTransport } };
-
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
 
@@ -88,8 +113,6 @@ describe("Transport", () => {
     });
 
     it("should set a BPM value", () => {
-      const Tone = { Transport: { ...mockToneTransport } };
-
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
 
@@ -100,8 +123,6 @@ describe("Transport", () => {
     });
 
     it("should get the default Swing value", () => {
-      const Tone = { Transport: { ...mockToneTransport } };
-
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
 
@@ -109,8 +130,6 @@ describe("Transport", () => {
     });
 
     it("should set a Swing value", () => {
-      const Tone = { Transport: { ...mockToneTransport } };
-
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
 
@@ -121,10 +140,6 @@ describe("Transport", () => {
     });
 
     it("should get the default Swing subdivision", () => {
-      const Tone = {
-        Transport: { ...mockToneTransport }
-      };
-
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
 
@@ -132,12 +147,6 @@ describe("Transport", () => {
     });
 
     it("should throw if setting an invalid swing subdivision", () => {
-      const Tone = {
-        Transport: {
-          ...mockToneTransport
-        }
-      };
-
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
 
@@ -149,12 +158,6 @@ describe("Transport", () => {
     });
 
     it("should set a valid swing subdivision", () => {
-      const Tone = {
-        Transport: {
-          ...mockToneTransport
-        }
-      };
-
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
 
@@ -165,12 +168,6 @@ describe("Transport", () => {
     });
 
     it("should get the default time signature", () => {
-      const Tone = {
-        Transport: {
-          ...mockToneTransport
-        }
-      };
-
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
 
@@ -178,12 +175,6 @@ describe("Transport", () => {
     });
 
     it("should throw if setting an invalid time signature", () => {
-      const Tone = {
-        Transport: {
-          ...mockToneTransport
-        }
-      };
-
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
 
@@ -195,12 +186,6 @@ describe("Transport", () => {
     });
 
     it("should throw if time signature if not an array", () => {
-      const Tone = {
-        Transport: {
-          ...mockToneTransport
-        }
-      };
-
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
 
@@ -214,12 +199,6 @@ describe("Transport", () => {
     });
 
     it("should throw if time signature if not an array of 2 positions", () => {
-      const Tone = {
-        Transport: {
-          ...mockToneTransport
-        }
-      };
-
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
 
@@ -233,12 +212,6 @@ describe("Transport", () => {
     });
 
     it("should set a valid time signature", () => {
-      const Tone = {
-        Transport: {
-          ...mockToneTransport
-        }
-      };
-
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
 
@@ -249,12 +222,6 @@ describe("Transport", () => {
     });
 
     it("should increment the tick count when ticks", () => {
-      const Tone = {
-        Transport: {
-          ...mockToneTransport
-        }
-      };
-
       const spy = jest.spyOn(Tone.Transport, "scheduleRepeat");
 
       const provider = new ToneTransportProvider(Tone);
@@ -268,12 +235,6 @@ describe("Transport", () => {
     });
 
     it("should get the current tick value within the min & max ticks range", () => {
-      const Tone = {
-        Transport: {
-          ...mockToneTransport
-        }
-      };
-
       const spy = jest.spyOn(Tone.Transport, "scheduleRepeat");
 
       const provider = new ToneTransportProvider(Tone);
@@ -291,12 +252,6 @@ describe("Transport", () => {
     });
 
     it("should increment the beats count when ticks 192 times", () => {
-      const Tone = {
-        Transport: {
-          ...mockToneTransport
-        }
-      };
-
       const spy = jest.spyOn(Tone.Transport, "scheduleRepeat");
 
       const provider = new ToneTransportProvider(Tone);
@@ -314,12 +269,6 @@ describe("Transport", () => {
     });
 
     it("should increment the beats count and return a value not greater than timeSignature[beats]", () => {
-      const Tone = {
-        Transport: {
-          ...mockToneTransport
-        }
-      };
-
       const spy = jest.spyOn(Tone.Transport, "scheduleRepeat");
 
       const provider = new ToneTransportProvider(Tone);
@@ -337,12 +286,6 @@ describe("Transport", () => {
     });
 
     it("should increment the bars count when beats complete a round", () => {
-      const Tone = {
-        Transport: {
-          ...mockToneTransport
-        }
-      };
-
       const spy = jest.spyOn(Tone.Transport, "scheduleRepeat");
 
       const provider = new ToneTransportProvider(Tone);
@@ -360,12 +303,6 @@ describe("Transport", () => {
     });
 
     it("should emit a tick event", () => {
-      const Tone = {
-        Transport: {
-          ...mockToneTransport
-        }
-      };
-
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
 
@@ -383,12 +320,6 @@ describe("Transport", () => {
     });
 
     it("should emit a beat event", () => {
-      const Tone = {
-        Transport: {
-          ...mockToneTransport
-        }
-      };
-
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
 
@@ -408,12 +339,6 @@ describe("Transport", () => {
     });
 
     it("should emit a bar event", () => {
-      const Tone = {
-        Transport: {
-          ...mockToneTransport
-        }
-      };
-
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
 
@@ -433,12 +358,6 @@ describe("Transport", () => {
     });
 
     it("should emit a tick, beat, bar events on Transport.start()", () => {
-      const Tone = {
-        Transport: {
-          ...mockToneTransport
-        }
-      };
-
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
 
@@ -457,12 +376,6 @@ describe("Transport", () => {
     });
 
     it("should emit a timeSignature event when changin the time signature", () => {
-      const Tone = {
-        Transport: {
-          ...mockToneTransport
-        }
-      };
-
       const provider = new ToneTransportProvider(Tone);
       Transport.provider = provider;
 
@@ -471,6 +384,33 @@ describe("Transport", () => {
       Transport.on("timeSignature", eventHandler);
 
       Transport.timeSignature = [2, 4];
+
+      expect(eventHandler).toHaveBeenCalledTimes(1);
+    });
+
+    it("should emit a start event when Transport starts", () => {
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      const eventHandler = jest.fn(x => x);
+
+      Transport.on("start", eventHandler);
+
+      Transport.start();
+
+      expect(eventHandler).toHaveBeenCalledTimes(1);
+    });
+
+    it("should emit a stop event when Transport stops", () => {
+      const provider = new ToneTransportProvider(Tone);
+      Transport.provider = provider;
+
+      const eventHandler = jest.fn(x => x);
+
+      Transport.on("stop", eventHandler);
+
+      Transport.start();
+      Transport.stop();
 
       expect(eventHandler).toHaveBeenCalledTimes(1);
     });
