@@ -370,9 +370,9 @@ describe("Transport", () => {
       Transport.start();
 
       expect(eventHandler).toHaveBeenCalledTimes(3);
-      expect(eventHandler.mock.results[0].value).toBe(0);
-      expect(eventHandler.mock.results[1].value).toBe(0);
-      expect(eventHandler.mock.results[2].value).toBe(0);
+      expect(eventHandler.mock.results[0].value).toBe(-1);
+      expect(eventHandler.mock.results[1].value).toBe(-1);
+      expect(eventHandler.mock.results[2].value).toBe(-1);
     });
 
     it("should emit a timeSignature event when changin the time signature", () => {
