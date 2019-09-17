@@ -847,9 +847,9 @@
     }, {
       key: "_emitCounters",
       value: function _emitCounters() {
-        this.emit("bar", this.bars);
-        this.emit("beat", this.beats);
-        this.emit("tick", this.ticks);
+        this.emit("bar", -1);
+        this.emit("beat", -1);
+        this.emit("tick", -1);
       }
     }, {
       key: "_resetCounters",
