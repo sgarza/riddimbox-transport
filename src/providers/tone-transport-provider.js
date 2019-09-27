@@ -115,13 +115,22 @@ class ToneTransportProvider extends EventEmmiter {
 
       if (this._beats % this.timeSignature[0] === 0) {
         this._bars += 1;
-        this.emit("bar", this.bars);
+        this.emit("bar", {
+          bars: this.bars,
+          totalBars: this._bars
+        });
       }
 
-      this.emit("beat", this.beats);
+      this.emit("beat", {
+        beats: this.beats,
+        totalBeats: this._beats
+      });
     }
 
-    this.emit("tick", this.ticks);
+    this.emit("tick", {
+      ticks: this.ticks,
+      totalTicks: this._ticks
+    });
   };
 
   _emitCounters() {

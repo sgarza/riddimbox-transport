@@ -316,7 +316,7 @@ describe("Transport", () => {
       provider._tickHandler();
 
       expect(eventHandler).toHaveBeenCalledTimes(1);
-      expect(eventHandler.mock.results[0].value).toBe(1);
+      expect(eventHandler).toHaveBeenCalledWith({ ticks: 1, totalTicks: 1 });
     });
 
     it("should emit a beat event", () => {
@@ -335,7 +335,7 @@ describe("Transport", () => {
       }
 
       expect(eventHandler).toHaveBeenCalledTimes(1);
-      expect(eventHandler.mock.results[0].value).toBe(1);
+      expect(eventHandler).toHaveBeenCalledWith({ beats: 1, totalBeats: 1 });
     });
 
     it("should emit a bar event", () => {
@@ -354,7 +354,7 @@ describe("Transport", () => {
       }
 
       expect(eventHandler).toHaveBeenCalledTimes(1);
-      expect(eventHandler.mock.results[0].value).toBe(1);
+      expect(eventHandler).toHaveBeenCalledWith({ bars: 1, totalBars: 1 });
     });
 
     it("should emit a tick, beat, bar events on Transport.start()", () => {
