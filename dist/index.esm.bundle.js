@@ -791,13 +791,22 @@ function (_EventEmmiter) {
         if (_this._beats % _this.timeSignature[0] === 0) {
           _this._bars += 1;
 
-          _this.emit("bar", _this.bars);
+          _this.emit("bar", {
+            bars: _this.bars,
+            totalBars: _this._bars
+          });
         }
 
-        _this.emit("beat", _this.beats);
+        _this.emit("beat", {
+          beats: _this.beats,
+          totalBeats: _this._beats
+        });
       }
 
-      _this.emit("tick", _this.ticks);
+      _this.emit("tick", {
+        ticks: _this.ticks,
+        totalTicks: _this._ticks
+      });
     });
 
     _this.engine = Tone;
